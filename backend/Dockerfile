@@ -25,6 +25,8 @@ RUN apt-get update && \
 
 RUN pip install "git+https://github.com/openai/CLIP.git"
 
+# copy the folder, not just its contents!
+ADD .cache /root/.cache
 WORKDIR /app
 ADD . /app
 

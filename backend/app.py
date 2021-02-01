@@ -41,6 +41,8 @@ def save_if_allowed(file, exts):
 def test():
     return preprocessing.predict()
 
+
+#CSV FILE SHOULD ONLY HAVE , between words, NO SPACES!
 @app.route("/multiple", methods=['GET', 'POST'])
 def multiple():
     if request.method != 'POST':
@@ -55,11 +57,12 @@ def multiple():
     if len(filenames) == 0:
         return "No file with allowed extension selected (" + str(ALLOWED_IMAGE_EXTS) + " are allowed)"
     print(filenames)
-    
+
 
     global done
     done = True
-    return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
+    return preprocessing.predict_multiple()
+    #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
 
 
 
