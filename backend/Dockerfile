@@ -13,6 +13,9 @@ ADD requirements.txt .
 RUN python -m pip install -r requirements.txt
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip pip install torch==1.7.1 torchvision==0.8.2 -f https://download.pytorch.org/whl/torch_stable.html ftfy regex
 
+WORKDIR /app
+ADD . /app
+
 #Install wget and downloads model to model.pt file
 RUN  apt-get update \
   && apt-get install -y wget \
@@ -21,9 +24,6 @@ RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openai
 
 #download tokenizer
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/bpe_simple_vocab_16e6.txt.gz -O bpe_simple_vocab_16e6.txt.gz
-
-WORKDIR /app
-ADD . /app
 
 # Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
 RUN useradd appuser && chown -R appuser /app
