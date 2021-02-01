@@ -16,6 +16,10 @@ Introduction and Goals {#section-introduction-and-goals}
 
 Requirements Overview {#_requirements_overview}
 ---------------------
+- clim is a web tool to classify images
+- the user can upload images and a json/csv/? file containing a set of keywords
+- the algorithm assignes a keyword to each image depending on the image content
+- the resulting mappings are provides as a json/csw/? file to be downloaded by the user
 
 Quality Goals {#_quality_goals}
 -------------
