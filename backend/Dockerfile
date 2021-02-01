@@ -19,8 +19,6 @@ RUN  apt-get update \
   && rm -rf /var/lib/apt/lists/*
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt -O model.pt
 
-RUN python -m pip install ftfy
-RUN python -m pip install regex
 #download tokenizer
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/bpe_simple_vocab_16e6.txt.gz -O bpe_simple_vocab_16e6.txt.gz
 
