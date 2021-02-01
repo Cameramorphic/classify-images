@@ -1,19 +1,24 @@
+import app
+
 import torch
-from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
+import clip
 from PIL import Image
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model, preprocess = clip.load("ViT-B/32", device=device)
 
-model = torch.jit.load("model.pt").cuda().eval()
-input_resolution = model.input_resolution.item()
-context_length = model.context_length.item()
-vocab_size = model.vocab_size.item()
+def predict():
+    image = preprocess(Image.open("CLIP.png")).unsqueeze(0).to(device)
+    text = clip.tokenize(["a diagram", "a dog", "a cat"]).to(device)
+
+    with torch.no_grad():
+        image_features = model.encode_image(image)
+        text_features = model.encode_text(text)
+    
+        logits_per_image, logits_per_text = model(image, text)
+        probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+
+    print("Label probs:", probs)
+    return str(probs)
 
 
-preprocess = Compose([
-    Resize(input_resolution, interpolation=Image.BICUBIC),
-    CenterCrop(input_resolution),
-    ToTensor()
-])
-
-image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).cuda()
-image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).cuda()

@@ -1,4 +1,5 @@
-FROM python:3.8-slim-buster
+FROM pytorch/pytorch:latest
+#FROM python:3.8-slim-buster
 
 EXPOSE 8080
 
@@ -11,23 +12,30 @@ ENV PYTHONUNBUFFERED 1
 # Install pip requirements
 ADD requirements.txt .
 RUN python -m pip install -r requirements.txt
-RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip pip install torch==1.7.1 torchvision==0.8.2 -f https://download.pytorch.org/whl/torch_stable.html ftfy regex
-
-WORKDIR /app
-ADD . /app
+#RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip pip install torch==1.7.1 torchvision==0.8.2 -f https://download.pytorch.org/whl/torch_stable.html ftfy regex
 
 #Install wget and downloads model to model.pt file
 RUN  apt-get update \
   && apt-get install -y wget \
   && rm -rf /var/lib/apt/lists/*
-RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt -O model.pt
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git
+
+RUN pip install "git+https://github.com/openai/CLIP.git"
+
+WORKDIR /app
+ADD . /app
+
+#RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt -O model.pt
 
 #download tokenizer
-RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/bpe_simple_vocab_16e6.txt.gz -O bpe_simple_vocab_16e6.txt.gz
+#RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/bpe_simple_vocab_16e6.txt.gz -O bpe_simple_vocab_16e6.txt.gz
 
 # Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
-RUN useradd appuser && chown -R appuser /app
-USER appuser
+#RUN useradd appuser && chown -R appuser /app
+#USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--timeout", "14400", "--workers", "1", "app:app"]

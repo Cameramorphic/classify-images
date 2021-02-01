@@ -1,3 +1,5 @@
+import preprocessing
+
 from flask import Flask, flash, request, send_file
 from werkzeug.utils import secure_filename
 import time
@@ -17,7 +19,7 @@ done = False
 # This is necessary so that the kubernetes load balancer can perform health checks
 @app.route("/", methods=['GET'])
 def hello():
-    return "Hello this is the keyword extractor. Upload your files at /multiple"
+    return "Welcome to classify-images. Upload your files at /multiple"
 
 SELECT_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">   
@@ -27,13 +29,17 @@ SELECT_FILES_HTML = '''
         </form>
          '''
 
-ALLOWED_IMAGE_EXTS = {'png'}
+ALLOWED_IMAGE_EXTS = {'png', 'jpg'}
 ALLOWED_CATEGORIES_EXTS = {'csv'}
 def save_if_allowed(file, exts):
     is_allowed = '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in exts
     if is_allowed:
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     return is_allowed
+
+@app.route("/test", methods=['GET'])
+def test():
+    return preprocessing.predict()
 
 @app.route("/multiple", methods=['GET', 'POST'])
 def multiple():
