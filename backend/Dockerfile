@@ -13,6 +13,11 @@ ADD requirements.txt .
 RUN python -m pip install -r requirements.txt
 RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip pip install torch==1.7.1 torchvision==0.8.2 -f https://download.pytorch.org/whl/torch_stable.html ftfy regex
 
+RUN  apt-get update \
+  && apt-get install -y wget \
+  && rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,id=custom-pip,target=/root/.cache/pip wget https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt -O model.pt
+
 WORKDIR /app
 ADD . /app
 
