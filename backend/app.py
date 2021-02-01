@@ -19,39 +19,41 @@ done = False
 def hello():
     return "Hello this is the keyword extractor. Upload your files at /multiple"
 
-
 SELECT_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">   
         <input type="file" name="files" multiple="">
+        <input type="file" name="categories">
         <input type="submit" value="add">
         </form>
          '''
 
+ALLOWED_IMAGE_EXTS = {'png'}
+ALLOWED_CATEGORIES_EXTS = {'csv'}
 def save_if_allowed(file, exts):
     is_allowed = '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in exts
     if is_allowed:
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     return is_allowed
 
-ALLOWED_EXTS = {'pdf','docx','xlsx', 'pptx', 'ppt'}
-
-# Upload multiple files
 @app.route("/multiple", methods=['GET', 'POST'])
 def multiple():
     if request.method != 'POST':
         return SELECT_FILES_HTML
     uploaded_files = request.files.getlist("files")
+    uploaded_categories = request.files.get("categories")
+    save_if_allowed(uploaded_categories, ALLOWED_CATEGORIES_EXTS)
+    print(uploaded_categories.filename)
     if len(uploaded_files) == 0:
         return "No file selected"
-    filenames = [f.filename for f in uploaded_files if save_if_allowed(f, ALLOWED_EXTS)]
+    filenames = [f.filename for f in uploaded_files if save_if_allowed(f, ALLOWED_IMAGE_EXTS)]
     if len(filenames) == 0:
-        return "No file with allowed extension selected (" + str(ALLOWED_EXTS) + " are allowed)"
+        return "No file with allowed extension selected (" + str(ALLOWED_IMAGE_EXTS) + " are allowed)"
     print(filenames)
     
 
     global done
     done = True
-    return send_file(results_path, as_attachment=True, attachment_filename=s)
+    return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
 
 
 
@@ -62,9 +64,7 @@ def delete_files():
     for filename in onlyfiles:
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         delete_file(filepath)
-    delete_file(keywords_excel_path)
-    delete_file(keywords_txt_path)
-    delete_file(keywords_json_path)
+    delete_file(results_path)
 
 def delete_file(filepath):
     if os.path.exists(filepath):
@@ -77,6 +77,7 @@ def delete_file(filepath):
 def after_request(response):
     # this only works, because the container is restricted to one thread!
     global done
+
     if done:
         delete_files()
         done = False
