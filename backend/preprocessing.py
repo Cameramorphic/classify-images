@@ -30,6 +30,42 @@ def predict():
 
 
 def predict_multiple():
+    # dir = app.app.config['UPLOAD_FOLDER']
+    # texts = []
+    # images = []
+    # imagenames = []
+    # for filename in os.listdir(dir):
+    #     if filename.endswith(".png") or filename.endswith(".jpg"):
+    #         image = preprocess(Image.open(os.path.join(dir, filename)).convert("RGB"))
+    #         images.append(image)
+    #         imagenames.append(filename)
+    #     elif filename.endswith(".csv"):
+    #         texts = open(os.path.join(dir, filename)).read().split(',')
+    #         print('categories set to: ' + ' - '.join(texts))
+    #
+    # image_input = torch.tensor(np.stack(images)).to(device) #.cuda()
+    # image_input -= image_mean[:, None, None]
+    # image_input /= image_std[:, None, None]
+    #
+    # text_input = clip.tokenize(texts).to(device) #.cuda()
+    #
+    # with torch.no_grad():
+    #     #image_features = model.encode_image(image_input).float()
+    #     #text_features = model.encode_text(text_input).float()
+    #
+    #     logits_per_image, logits_per_text = model(image_input, text_input)
+    #     probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+    #
+    # print(probs)
+    # dic = predictMultipleAsDic()
+    results = ['<tr><td>' + key + ': </td><td>' + dic[key] + '</td></tr>' for key in dic]
+
+    #m = np.argmax(probs, axis=-1)
+    #res = [imagenames[i] + " :  " + texts[i] for i in m]
+    return '<table>' + ' '.join(results) + '</table>'
+
+def predictMultipleAsDic():
+
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
@@ -56,12 +92,9 @@ def predict_multiple():
         logits_per_image, logits_per_text = model(image_input, text_input)
         probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
-    print(probs)
-    results = ['<tr><td>' + imagenames[i] + ': </td><td>' + texts[np.argmax(probs[i])] + '</td></tr>' for i in range(len(probs))]
+    image_test = {imagenames[i]: texts[np.argmax(probs[i])] for i in range(len(probs))}
+    return image_test
 
-    #m = np.argmax(probs, axis=-1)
-    #res = [imagenames[i] + " :  " + texts[i] for i in m]
-    return '<table>' + ' '.join(results) + '</table>'
 
 #currently only one video at a time (but with multiple textual descriptions)
 def video_retrieval():
@@ -106,6 +139,7 @@ def video_retrieval():
 
     results = ['<tr><td>' + texts[i] + ': </td><td>' + str(np.argmax(probs[i])) + '</td></tr>' for i in range(len(texts))]
     return '<table>' + ' '.join(results) + '</table>'
+
 
 
 def extractImages(pathIn):
