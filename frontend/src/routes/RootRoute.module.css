@@ -1,24 +1,37 @@
-.sloganArea {
-    position: relative;
-    width: 100%;
-    height: 350px;
-    background-color: #52008d;
+.gridContainer {
+    display: grid;
+    gap: 28px;
+    padding: 28px;
+    grid-template-columns: 1fr 1fr;
 }
 
-.particles {
-    width: 100%;
-    height: 100%;
+.gridItem {
+    color: #000;
+    min-height: 80px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 15px #ccc;
+    text-decoration: none;
+    transition: .3s;
 }
 
-.slogan {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 32px;
-    line-height: 1.5em;
-    font-weight: 800;
-    color: #fff;
+.gridItem:hover {
+    color: rgb(28, 138, 76);
+    box-shadow: 1px 1px 20px rgba(66, 124, 91, 0.3);
+}
+
+.gridItem:first-child {
+    grid-column: 1 / 3;
+}
+
+.gridItem .title {
+    text-align: center;
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.gridItem .content {
+    color: #555;
+    font-weight: 500;
 }

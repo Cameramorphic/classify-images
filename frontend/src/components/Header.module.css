@@ -6,9 +6,11 @@
     position: sticky;
     top: 0;
     background-color: #fff;
+    z-index: 10;
 }
 
 .branding {
+    text-decoration: none;
     display: flex;
     align-items: center;
 }
@@ -18,9 +20,15 @@
     height: 50px;
     margin-right: 5px;
     transform: scale(1.4);
+    transition: .3s;
+}
+
+.branding:hover .icon {
+    transform: scale(1.6);
 }
 
 .branding .brandName {
+    color: #000;
     font-size: 20px;
     font-weight: 800;
 }
@@ -28,6 +36,11 @@
 .navigation {
     display: flex;
     align-items: center;
+}
+
+.navigation .active {
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 .navigation > * {

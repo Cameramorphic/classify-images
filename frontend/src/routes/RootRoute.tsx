@@ -1,108 +1,40 @@
 import React from 'react';
 
-import Particles from 'react-particles-js';
+import { Link } from 'react-router-dom';
+
+import Slogan from 'components/Slogan';
+import { CATEGORISE, SEARCH_IMAGES, SEARCH_VIDEO } from './urlPaths';
 
 import styles from './RootRoute.module.css';
 
+interface IProps {
+    link: string;
+    title: string;
+    children: React.ReactNode;
+}
+
+const GridItem = ({ link, title, children }: IProps) => (
+    <Link to={link} className={styles.gridItem}>
+        <div className={styles.title}>{title}</div>
+        <div className={styles.content}>{children}</div>
+    </Link>
+);
+
 export default function RootRoute() {
     return (
-        <div className={styles.sloganArea}>
-            <div className={styles.slogan}>
-                AI powered image classification
+        <div>
+            <Slogan />
+            <div className={styles.gridContainer}>
+                <GridItem link={CATEGORISE} title='Categorise Images'>
+                    Tag your images with your own categories, powered by AI.
+                </GridItem>
+                <GridItem link={SEARCH_VIDEO} title='Search Video'>
+                    Use text to find occurances of sonething in a video file and get the respective timestamps.
+                </GridItem>
+                <GridItem link={SEARCH_IMAGES} title='Search Images'>
+                    Use text to find matching images from a given list.
+                </GridItem>
             </div>
-            <Particles
-                className={styles.particles}
-                params={{
-                    particles: {
-                        number: {
-                            value: 150,
-                            density: {
-                                enable: true,
-                                value_area: 800
-                            }
-                        },
-                        color: {
-                            value: "#ffffff"
-                        },
-                        opacity: {
-                            value: 0.5,
-                            random: false,
-                            anim: {
-                                enable: false,
-                                speed: 1,
-                                opacity_min: 0.1,
-                                sync: false
-                            }
-                        },
-                        size: {
-                            value: 3,
-                            random: true,
-                            anim: {
-                                enable: false,
-                                speed: 40,
-                                size_min: 0.1,
-                                sync: false
-                            }
-                        },
-                        line_linked: {
-                            enable: true,
-                            distance: 150,
-                            color: "#ffffff",
-                            opacity: 0.4,
-                            width: 1
-                        },
-                        move: {
-                            enable: true,
-                            speed: 2,
-                            direction: "none",
-                            random: false,
-                            straight: false,
-                            out_mode: "bounce",
-                            bounce: false,
-                            attract: {
-                                enable: false,
-                                rotateX: 600,
-                                rotateY: 1200
-                            }
-                        }
-                    },
-                    interactivity: {
-                        detect_on: "window",
-                        events: {
-                            onhover: {
-                                enable: true,
-                                mode: "bubble"
-                            },
-                            resize: true
-                        },
-                        modes: {
-                            grab: {
-                                distance: 400,
-                                line_linked: {
-                                    opacity: 1
-                                }
-                            },
-                            bubble: {
-                                distance: 300,
-                                size: 5,
-                                duration: 2,
-                                opacity: 1
-                            },
-                            repulse: {
-                                distance: 200,
-                                duration: 0.4
-                            },
-                            push: {
-                                particles_nb: 4
-                            },
-                            remove: {
-                                particles_nb: 2
-                            }
-                        }
-                    },
-                    retina_detect: true
-                }}
-            />
         </div>
     );
 }
