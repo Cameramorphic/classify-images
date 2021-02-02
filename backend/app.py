@@ -14,12 +14,10 @@ app.config['UPLOAD_FOLDER'] = '/app/uploads/'
 # Use this to restrict the maximum file size, This restricts to 16MB:
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-done = False
-
 # This is necessary so that the kubernetes load balancer can perform health checks
 @app.route("/", methods=['GET'])
 def hello():
-    return "Welcome to classify-images. Upload your files at /multiple"
+    return "Welcome to classify-images. categorize files at /categorize "
 
 SELECT_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">   
@@ -37,14 +35,9 @@ def save_if_allowed(file, exts):
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     return is_allowed
 
-@app.route("/test", methods=['GET'])
-def test():
-    return preprocessing.predict()
-
-
 #CSV FILE SHOULD ONLY HAVE , between words, NO SPACES!
-@app.route("/multiple", methods=['GET', 'POST'])
-def multiple():
+@app.route("/categorize", methods=['GET', 'POST'])
+def categorize():
     if request.method != 'POST':
         return SELECT_FILES_HTML
     uploaded_files = request.files.getlist("files")
@@ -57,10 +50,6 @@ def multiple():
     if len(filenames) == 0:
         return "No file with allowed extension selected (" + str(ALLOWED_IMAGE_EXTS) + " are allowed)"
     print(filenames)
-
-
-    global done
-    done = True
     return preprocessing.predict_multiple()
     #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
 
@@ -85,12 +74,7 @@ def delete_file(filepath):
 @app.after_request
 def after_request(response):
     # this only works, because the container is restricted to one thread!
-    global done
-
-    if done:
-        delete_files()
-        done = False
-
+    delete_files()
     # allow cross origin communication (cors)
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
