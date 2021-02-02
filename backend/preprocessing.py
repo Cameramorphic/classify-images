@@ -14,6 +14,21 @@ model, preprocess = clip.load("ViT-B/32", device=device)
 image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).to(device) #.cuda()
 image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).to(device) #.cuda()
 
+def predict():
+    image = preprocess(Image.open("CLIP.png")).unsqueeze(0).to(device)
+    text = clip.tokenize(["a diagram", "a dog", "a cat"]).to(device)
+
+    with torch.no_grad():
+        #image_features = model.encode_image(image)
+        #text_features = model.encode_text(text)
+    
+        logits_per_image, logits_per_text = model(image, text)
+        probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+
+    print("Label probs:", probs)
+    return str(probs)
+
+
 def predict_multiple():
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
