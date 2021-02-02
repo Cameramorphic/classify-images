@@ -27,8 +27,17 @@ SELECT_FILES_HTML = '''
         </form>
          '''
 
+SELECT_VID_FILES_HTML = '''
+        <form method="POST" enctype="multipart/form-data">   
+        <input type="file" name="files" multiple="">
+        <input type="file" name="categories">
+        <input type="submit" value="add">
+        </form>
+         '''
+
 ALLOWED_IMAGE_EXTS = {'png', 'jpg'}
 ALLOWED_CATEGORIES_EXTS = {'csv'}
+ALLOWED_VIDEO_EXTS = {'mp4'}
 def save_if_allowed(file, exts):
     is_allowed = '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in exts
     if is_allowed:
@@ -41,9 +50,9 @@ def categorize():
     if request.method != 'POST':
         return SELECT_FILES_HTML
     uploaded_files = request.files.getlist("files")
-    uploaded_categories = request.files.get("categories")
-    save_if_allowed(uploaded_categories, ALLOWED_CATEGORIES_EXTS)
-    print(uploaded_categories.filename)
+    error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS)
+    if error is not None:
+        return error
     if len(uploaded_files) == 0:
         return "No file selected"
     filenames = [f.filename for f in uploaded_files if save_if_allowed(f, ALLOWED_IMAGE_EXTS)]
@@ -52,6 +61,26 @@ def categorize():
     print(filenames)
     return preprocessing.predict_multiple()
     #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
+
+@app.route("/video", methods=['GET', 'POST'])
+def video():
+    if request.method != 'POST':
+        return SELECT_VID_FILES_HTML
+    video_error = check_uploaded_file("video", ALLOWED_VIDEO_EXTS)
+    categories_error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS)
+    if video_error is not None or categories_error is not None:
+        return video_error + "\n" + categories_error
+    return "Files uploaded"
+
+def check_uploaded_file(name, allowed_extensions):
+    uploaded_file = request.files.get(name)
+    if uploaded_file.filename == "":
+        return "No file selected, please select a " + name + " file"
+    allowed = save_if_allowed(uploaded_file, allowed_extensions)
+    if not allowed:
+        return "Invalid extension, allowed extensions are: " + str(allowed_extensions)
+    print(uploaded_file)
+    return None
 
 def delete_files():
     mypath = app.config['UPLOAD_FOLDER']
