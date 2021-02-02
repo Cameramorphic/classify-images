@@ -1,15 +1,14 @@
-from flask import Response
-
 import app
 
-import torch
 import clip
-from PIL import Image
-import os
-import numpy as np
 import cv2
-from requests_toolbelt import MultipartEncoder
 import json
+import numpy as np
+import os
+import torch
+from flask import Response
+from PIL import Image
+from requests_toolbelt import MultipartEncoder
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
@@ -31,6 +30,11 @@ def predict_multiple():
         elif filename.endswith(".csv"):
             texts = open(os.path.join(dir, filename)).read().split(',')
             print('categories set to: ' + ' - '.join(texts))
+        elif filename.endswith(".json"):
+                    file = open(os.path.join(dir, filename))
+                    texts = json.loads(file.read())["categories"]
+                    print('categories set to: ' + ' - '.join(texts))
+                    file.close()
 
     image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]
@@ -64,6 +68,11 @@ def video_retrieval():
         elif filename.endswith(".csv"):
             texts = open(os.path.join(dir, filename)).read().split(',')
             print('categories set to: ' + ' - '.join(texts))
+        elif filename.endswith(".json"):
+            file = open(os.path.join(dir, filename))
+            texts = json.loads(file.read())["categories"]
+            print('categories set to: ' + ' - '.join(texts))
+            file.close()
 
     image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]

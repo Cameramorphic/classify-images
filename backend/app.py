@@ -1,9 +1,8 @@
 import preprocessing
 
-from flask import Flask, flash, request, send_file
-from werkzeug.utils import secure_filename
-import time
 import os
+import pdoc
+from flask import Flask, flash, request, send_file
 from os import listdir
 from os.path import isfile, join
 
@@ -36,7 +35,7 @@ SELECT_VID_FILES_HTML = '''
          '''
 
 ALLOWED_IMAGE_EXTS = {'png', 'jpg'}
-ALLOWED_CATEGORIES_EXTS = {'csv'}
+ALLOWED_CATEGORIES_EXTS = {'csv', 'json'}
 ALLOWED_VIDEO_EXTS = {'mp4'}
 def save_if_allowed(file, exts):
     is_allowed = '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in exts
@@ -81,6 +80,14 @@ def check_uploaded_file(name, allowed_extensions):
         return "Invalid extension, allowed extensions are: " + str(allowed_extensions)
     print(uploaded_file)
     return None
+
+@app.route("/doc/preprocessing", methods=['GET'])
+def preproccessing_doc():
+    return pdoc.html('preprocessing')
+
+@app.route("/doc/app", methods=['GET'])
+def app_doc():
+    return pdoc.html('app')
 
 def delete_files():
     mypath = app.config['UPLOAD_FOLDER']
