@@ -1,0 +1,3 @@
+.content {
+    min-height: calc(100vh - 72px - 70px); /* calc('viewport height' - 'header' - 'footer')*/
+}
