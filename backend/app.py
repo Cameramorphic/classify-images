@@ -53,9 +53,6 @@ def categorize():
     return preprocessing.predict_multiple()
     #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
 
-
-
-
 def delete_files():
     mypath = app.config['UPLOAD_FOLDER']
     onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]

@@ -5,6 +5,7 @@ import clip
 from PIL import Image
 import os
 import numpy as np
+import cv2
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
@@ -60,5 +61,49 @@ def predict_multiple():
     #m = np.argmax(probs, axis=-1)
     #res = [imagenames[i] + " :  " + texts[i] for i in m]
     return '<table>' + ' '.join(results) + '</table>'
+
+
+def video_retrieval():
+    dir = app.app.config['UPLOAD_FOLDER']
+    texts = []
+    images = []
+    imagenames = []
+    for filename in os.listdir(dir):
+        if filename.endswith(".mp4"):
+            images, secs = extractImages(os.path.join(dir, filename))
+            images = [preprocess(image.convert("RGB")) for image in images]
+        elif filename.endswith(".csv"):
+            texts = open(os.path.join(dir, filename)).read().split(',')
+            print('categories set to: ' + ' - '.join(texts))
+
+    image_input = torch.tensor(np.stack(images)).to(device)
+    image_input -= image_mean[:, None, None]
+    image_input /= image_std[:, None, None]
+    text_input = clip.tokenize(texts).to(device)
+
+    with torch.no_grad():
+        logits_per_image, logits_per_text = model(image_input, text_input)
+        probs = logits_per_text.softmax(dim=-1).cpu().numpy()
+    print(probs)
+    print(imagenames)
+
+    results = ['<tr><td>' + texts[i] + ': </td><td>' + str(np.argmax(probs[i])) + '</td></tr>' for i in range(len(texts))]
+    return '<table>' + ' '.join(results) + '</table>'
+
+
+def extractImages(pathIn):
+    images = []
+    count = 0
+    vidcap = cv2.VideoCapture(pathIn)
+    success,image = vidcap.read()
+    success = True
+    while success:
+        vidcap.set(cv2.CAP_PROP_POS_MSEC,(count*1000))
+        success,image = vidcap.read()
+        if success:
+            images.append(Image.fromarray(image))
+        count = count + 1
+    return images, count
+
 
 
