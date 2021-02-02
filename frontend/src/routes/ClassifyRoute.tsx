@@ -1,9 +1,10 @@
-import Slogan from 'components/Slogan';
 import React from 'react';
 
-import styles from './RootRoute.module.css';
+import Slogan from 'components/Slogan';
 
-export default function RootRoute() {
+import styles from './ClassifyRoute.module.css';
+
+export default function ClassifyRoute() {
     return (
         <div>
             <Slogan small text='Categorise Images' />
