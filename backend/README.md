@@ -7,6 +7,9 @@ PUT THIS FILE INTO /.cache/clip
 build:
 docker image build -t classify-images:0.0.1 .
 
+
+THE DOCKER REQUIRES APPROX 4GB of RAM to function properly
+AT 2GB RAM it behaved weirdly (files attached to requests just disappeared)
 run:
 docker run -p 8080:8080 classify-images:0.0.1
 docker run -p 8080:8080 -d classify-images:0.0.1
