@@ -6,6 +6,7 @@ from PIL import Image
 import os
 import numpy as np
 import cv2
+from requests_toolbelt import MultipartEncoder
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
@@ -62,15 +63,17 @@ def predict_multiple():
     #res = [imagenames[i] + " :  " + texts[i] for i in m]
     return '<table>' + ' '.join(results) + '</table>'
 
-
+#currently only one video at a time (but with multiple textual descriptions)
 def video_retrieval():
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
     imagenames = []
+    videopath = ''
     for filename in os.listdir(dir):
         if filename.endswith(".mp4"):
-            images, secs = extractImages(os.path.join(dir, filename))
+            videopath = os.path.join(dir, filename)
+            images, secs = extractImages(videopath)
             images = [preprocess(image.convert("RGB")) for image in images]
         elif filename.endswith(".csv"):
             texts = open(os.path.join(dir, filename)).read().split(',')
@@ -87,6 +90,20 @@ def video_retrieval():
     print(probs)
     print(imagenames)
 
+    filepaths = []
+    for i in range(len(texts)):
+        filepaths.append(saveImageFromVideo(videopath, np.argmax(probs[i])))
+
+
+
+    testpath = filepaths[0]
+    testfile_base = os.path.basename(testpath)
+    m = MultipartEncoder(
+           fields={'field1': 'value', 'field1': 'value',
+                   'image': (testfile_base, open(testpath, 'rb'), 'image/jpg')}
+        )
+    #return Response(m.to_string(), mimetype=m.content_type)
+
     results = ['<tr><td>' + texts[i] + ': </td><td>' + str(np.argmax(probs[i])) + '</td></tr>' for i in range(len(texts))]
     return '<table>' + ' '.join(results) + '</table>'
 
@@ -102,8 +119,16 @@ def extractImages(pathIn):
         success,image = vidcap.read()
         if success:
             images.append(Image.fromarray(image))
-        count = count + 1
+            count = count + 1
     return images, count
 
+#index in seconds
+def saveImageFromVideo(pathIn, index):
+    vidcap = cv2.VideoCapture(pathIn)
+    vidcap.set(cv2.CAP_PROP_POS_MSEC,(index*1000))
+    success,image = vidcap.read()
+    image_path = os.path.basename(pathIn) + '-' + str(index) + '.jpg'
+    cv2.imwrite(image_path, image)
+    return image_path
 
 

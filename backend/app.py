@@ -29,7 +29,7 @@ SELECT_FILES_HTML = '''
 
 SELECT_VID_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">   
-        <input type="file" name="files" multiple="">
+        <input type="file" name="video">
         <input type="file" name="categories">
         <input type="submit" value="add">
         </form>
@@ -69,12 +69,12 @@ def video():
     video_error = check_uploaded_file("video", ALLOWED_VIDEO_EXTS)
     categories_error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS)
     if video_error is not None or categories_error is not None:
-        return video_error + "\n" + categories_error
-    return "Files uploaded"
+        return 'Videoerror or categorieserror' #video_error + "\n" + categories_error
+    return preprocessing.video_retrieval()
 
 def check_uploaded_file(name, allowed_extensions):
     uploaded_file = request.files.get(name)
-    if uploaded_file.filename == "":
+    if uploaded_file == None or uploaded_file.filename == "":
         return "No file selected, please select a " + name + " file"
     allowed = save_if_allowed(uploaded_file, allowed_extensions)
     if not allowed:
