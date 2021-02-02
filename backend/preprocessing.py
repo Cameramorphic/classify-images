@@ -22,8 +22,8 @@ def predict_multiple():
     imagenames = []
     for filename in os.listdir(dir):
         if filename.endswith(".png") or filename.endswith(".jpg"):
-            image = preprocess(Image.open(os.path.join(dir, filename)).convert("RGB"))
-            images.append(image)
+            with Image.open(os.path.join(dir, filename)) as image:
+                images.append(preprocess(image.convert("RGB")))
             imagenames.append(filename)
         elif filename.endswith(".csv"):
             texts = open(os.path.join(dir, filename)).read().split(',')
