@@ -1,6 +1,7 @@
 import React from 'react';
 
 import clx from 'classnames';
+import { Helmet } from 'react-helmet';
 import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
 import Header from 'components/Header';
@@ -15,7 +16,10 @@ export const containerClass = styles.widthContainer;
 function Content() {
   const { pathname } = useLocation();
   const currentRoute = routes.find(route => route.path === pathname);
-  return (
+  return (<>
+    <Helmet>
+      <title>{currentRoute?.title}</title>
+    </Helmet>
     <div className={clx(styles.content, containerClass)}>
       <Slogan text={currentRoute?.title} small={!currentRoute?.mainPage} />
       <Switch>
@@ -23,7 +27,7 @@ function Content() {
         <Redirect to={PATHS.ERROR} />
       </Switch>
     </div>
-  );
+  </>);
 }
 
 function App() {
