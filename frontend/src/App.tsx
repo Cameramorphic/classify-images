@@ -1,27 +1,36 @@
 import React from 'react';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import clx from 'classnames';
+import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import ClassifyRoute from 'routes/ClassifyRoute';
-import ErrorRoute from 'routes/ErrorRoute';
-import RootRoute from 'routes/RootRoute';
-import { CATEGORISE } from 'routes/urlPaths';
+import Slogan from 'components/Slogan';
+import { PATHS, routes } from 'routes/routeConfig';
 
 import styles from './App.module.css';
+
+export const containerClass = styles.widthContainer;
+
+function Content() {
+  const { pathname } = useLocation();
+  const currentRoute = routes.find(route => route.path === pathname);
+  return (
+    <div className={clx(styles.content, containerClass)}>
+      <Slogan text={currentRoute?.title} small={!currentRoute?.mainPage} />
+      <Switch>
+        {routes.map((route, i) => <Route key={`${route.path}_${i}`} {...route} />)}
+        <Redirect to={PATHS.ERROR} />
+      </Switch>
+    </div>
+  );
+}
 
 function App() {
   return (<>
     <Router>
       <Header />
-      <div className={styles.content}>
-        <Switch>
-          <Route path={CATEGORISE} component={ClassifyRoute} />
-          <Route exact path='/' component={RootRoute} />
-          <Route component={ErrorRoute} />
-        </Switch>
-      </div>
+      <Content />
       <Footer />
     </Router>
   </>);

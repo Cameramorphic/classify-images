@@ -31,3 +31,10 @@
     font-weight: 800;
     color: #fff;
 }
+
+@media (min-width: 1440px) {
+    .sloganArea {
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+}
