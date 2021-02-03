@@ -3,7 +3,9 @@
   box-sizing: content-box;
 }
 
-a:hover {
+a:hover,
+a:focus,
+a:active {
   color: initial;
   text-decoration: initial;
 }
