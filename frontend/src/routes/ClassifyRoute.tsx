@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel , Row, Col} from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import styles from './ClassifyRoute.module.css';
@@ -10,6 +10,25 @@ export const API_BASE_URL = 'http://localhost:8080';
 export const dndPlaceholderStyle = {
     lineHeight: '62px',
 };
+
+//return <PanelImage file={img} category={category} />
+//URL.createObjectURL(imageList[0].blobFile)
+//<Panel header={JSON.stringify(imageList[0].name && result?.data[imageList[0].name], undefined, 2)}>
+function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
+    return <div>{categoryMap &&
+        imageList.map(img => {
+            const category = img.name ? categoryMap[img.name] : undefined;
+            const image_url = URL.createObjectURL(img.blobFile);
+            return (
+                <Col md={6} sm={12}>
+                    <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
+                        <img src={image_url} height="240" />
+                        <Panel header={category}></Panel>
+                    </Panel>
+                </Col>)
+        })
+    }</div>
+}
 
 export default function ClassifyRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
@@ -30,6 +49,8 @@ export default function ClassifyRoute() {
         setResult(response);
         setUploadProgress(undefined);
     };
+
+ 
 
     return (
         <div>
@@ -69,6 +90,7 @@ export default function ClassifyRoute() {
                 </div>
             </Form>
             <div style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result?.data, undefined, 2)}</div>
+            <ImagePanel categoryMap={result?.data} imageList={imageList}/>
         </div>
     );
 }
