@@ -35,6 +35,8 @@ def predict_multiple():
                     texts = json.loads(file.read())["categories"]
                     print('categories set to: ' + ' - '.join(texts))
                     file.close()
+    if not texts:
+        texts = open("/app/default-list.csv").read().split(',')
 
     image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]
@@ -73,6 +75,8 @@ def video_retrieval():
             texts = json.loads(file.read())["categories"]
             print('categories set to: ' + ' - '.join(texts))
             file.close()
+    if not texts:
+        texts = open(os.path.join(dir, filename)).read().split(',')
 
     image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]
