@@ -1,4 +1,5 @@
-.form {
-    max-width: 325px;
-    margin: 50px auto;
+.mdContainer {
+    max-width: 1000px;
+    padding: 25px;
+    margin: 0 auto;
 }
