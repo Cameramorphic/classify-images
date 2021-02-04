@@ -104,7 +104,7 @@ def video_retrieval():
 
     with open(name, 'w', encoding='utf-8') as f:
         json.dump(text_file_time, f, ensure_ascii=False, indent=4)
-        filepaths.append(name)
+        #filepaths.append(name)
     m = MultipartEncoder(
         fields={
             fname: open(fname, 'rb') for fname in filepaths}
