@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel , Row, Col} from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import styles from './ClassifyRoute.module.css';
@@ -11,26 +11,7 @@ export const dndPlaceholderStyle = {
     lineHeight: '62px',
 };
 
-//return <PanelImage file={img} category={category} />
-//URL.createObjectURL(imageList[0].blobFile)
-//<Panel header={JSON.stringify(imageList[0].name && result?.data[imageList[0].name], undefined, 2)}>
-function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-    return <div>{categoryMap &&
-        imageList.map(img => {
-            const category = img.name ? categoryMap[img.name] : undefined;
-            const image_url = URL.createObjectURL(img.blobFile);
-            return (
-                <Col md={6} sm={12}>
-                    <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
-                        <img src={image_url} height="240" />
-                        <Panel header={category}></Panel>
-                    </Panel>
-                </Col>)
-        })
-    }</div>
-}
-
-export default function ClassifyRoute() {
+export default function SearchImageRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
     const [uploadProgress, setUploadProgress] = useState<number>();
@@ -48,12 +29,10 @@ export default function ClassifyRoute() {
         const config: AxiosRequestConfig = {
             onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
         }
-        const response = await axios.post(`${API_BASE_URL}/categorize`, formData, config);
+        const response = await axios.post(`${API_BASE_URL}/image`, formData, config);
         setResult(response);
         setUploadProgress(undefined);
     };
-
- 
 
     return (
         <div>
@@ -93,7 +72,6 @@ export default function ClassifyRoute() {
                 </div>
             </Form>
             <div style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result?.data, undefined, 2)}</div>
-            <ImagePanel categoryMap={result?.data} imageList={imageList}/>
         </div>
     );
 }

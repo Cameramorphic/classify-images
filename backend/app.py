@@ -2,6 +2,7 @@ import preprocessing
 
 import os
 import pdoc
+import json
 from flask import Flask, flash, request, send_file
 from os import listdir
 from os.path import isfile, join
@@ -48,9 +49,21 @@ def save_if_allowed(file, exts):
 def categorize():
     if request.method != 'POST':
         return SELECT_FILES_HTML
+    error = upload_images_and_categories_file(True)
+    return error if error else preprocessing.predict_multiple(True)
+    #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
+
+@app.route("/image", methods=['GET', 'POST'])
+def image():
+    if request.method != 'POST':
+        return SELECT_FILES_HTML
+    error = upload_images_and_categories_file(False)
+    return error if error else preprocessing.predict_multiple(False)
+
+def upload_images_and_categories_file(allow_no_categories_file):
     uploaded_files = request.files.getlist("files")
-    error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS)
-    if error is not None:
+    error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS, allow_no_categories_file)
+    if error:
         return error
     if len(uploaded_files) == 0:
         return "No file selected"
@@ -58,23 +71,22 @@ def categorize():
     if len(filenames) == 0:
         return "No file with allowed extension selected (" + str(ALLOWED_IMAGE_EXTS) + " are allowed)"
     print(filenames)
-    return preprocessing.predict_multiple()
-    #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
+    return None
 
 @app.route("/video", methods=['GET', 'POST'])
 def video():
     if request.method != 'POST':
         return SELECT_VID_FILES_HTML
     video_error = check_uploaded_file("video", ALLOWED_VIDEO_EXTS)
-    categories_error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS)
+    categories_error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS, True)
     if video_error is not None or categories_error is not None:
-        return 'Videoerror or categorieserror' #video_error + "\n" + categories_error
+        return video_error if categories_error is None else categories_error
     return preprocessing.video_retrieval()
 
-def check_uploaded_file(name, allowed_extensions):
+def check_uploaded_file(name, allowed_extensions, allow_no_file=False):
     uploaded_file = request.files.get(name)
-    if uploaded_file == None or uploaded_file.filename == "":
-        return None #"No file selected, please select a " + name + " file"
+    if uploaded_file.filename == "":
+        return None if allow_no_file else "No file selected, please select a " + name + " file"
     allowed = save_if_allowed(uploaded_file, allowed_extensions)
     if not allowed:
         return "Invalid extension, allowed extensions are: " + str(allowed_extensions)

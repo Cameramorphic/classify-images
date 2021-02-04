@@ -17,7 +17,7 @@ image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).to(device)
 image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).to(device)
 
 
-def predict_multiple():
+def predict_multiple(by_image):
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
@@ -45,15 +45,18 @@ def predict_multiple():
 
     with torch.no_grad():
         logits_per_image, logits_per_text = model(image_input, text_input)
-        probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+        if by_image:
+            probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+            dic = {imagenames[i]: texts[np.argmax(probs[i])] for i in range(len(probs))}
+        else:
+            probs = logits_per_text.softmax(dim=-1).cpu().numpy()
+            dic = {texts[i]: imagenames[np.argmax(probs[i])] for i in range(len(probs))}
 
-    dic = {imagenames[i]: texts[np.argmax(probs[i])] for i in range(len(probs))}
     # results = ['<tr><td>' + key + ': </td><td>' + dic[key] + '</td></tr>' for key in dic]
     # m = np.argmax(probs, axis=-1)
     # res = [imagenames[i] + " :  " + texts[i] for i in m]
     # return '<table>' + ' '.join(results) + '</table>'
     return json.dumps(dic)
-
 
 # currently only one video at a time (but with multiple textual descriptions)
 def video_retrieval():
@@ -104,7 +107,7 @@ def video_retrieval():
 
     with open(name, 'w', encoding='utf-8') as f:
         json.dump(text_file_time, f, ensure_ascii=False, indent=4)
-        filepaths.append(name)
+        #filepaths.append(name)
     m = MultipartEncoder(
         fields={
             fname: open(fname, 'rb') for fname in filepaths}

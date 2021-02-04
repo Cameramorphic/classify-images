@@ -3,6 +3,7 @@ import { RouteProps } from "react-router-dom";
 import ClassifyRoute from "./ClassifyRoute";
 import ErrorRoute from "./ErrorRoute";
 import RootRoute from "./RootRoute";
+import SearchImageRoute from "./SearchImageRoute";
 import SearchVideoRoute from "./SearchVideoRoute";
 import AboutRoute from "./AboutRoute";
 
@@ -40,7 +41,8 @@ export const routes: IRoute[] = [
     },
     {
         title: 'Search Images',
-        path: PATHS.SEARCH_VIDEO
+        path: PATHS.SEARCH_IMAGES,
+        component: SearchImageRoute
     },
     {
         title: 'About',
