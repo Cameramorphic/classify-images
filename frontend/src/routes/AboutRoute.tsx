@@ -13,9 +13,14 @@ type textState = {
 }
 
 export default class AboutRoute extends Component<{}, textState> {
+    constructor() {
+        super({});
+        this.state = { mdtext: "set in constructor" }; //used setState here did not work
+    }
+
     componentWillMount() {
       fetch(readme).then((response) => response.text()).then((text) => {
-        this.setState({ mdtext: "text was set" });
+        this.setState({ mdtext: text });
       })
     }
 
