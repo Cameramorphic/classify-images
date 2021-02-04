@@ -17,7 +17,10 @@ export default function ClassifyRoute() {
     const [uploadProgress, setUploadProgress] = useState<number>();
     const [result, setResult] = useState<AxiosResponse>();
 
+    const isInputInvalid = imageList.length === 0 || categoryList.length !== 1;
+
     const upload = async () => {
+        if (isInputInvalid) return;
         const formData = new FormData();
         imageList.forEach(file => file.blobFile && formData.append('files', file.blobFile))
         const categoryFile = categoryList[0].blobFile;
@@ -54,7 +57,7 @@ export default function ClassifyRoute() {
                     <Uploader
                         name='categories'
                         fileList={categoryList}
-                        onChange={list => setCategoryList([list[list.length - 1]])}
+                        onChange={list => setCategoryList(list.length > 0 ? [list[list.length - 1]] : [])}
                         accept='.csv,.json'
                         draggable
                         autoUpload={false}>
@@ -62,7 +65,7 @@ export default function ClassifyRoute() {
                     </Uploader>
                 </FormGroup>
                 <div className={styles.uploadControls}>
-                    <Button onClick={upload} loading={(uploadProgress ?? 100) < 100}>Upload</Button>
+                    <Button onClick={upload} disabled={isInputInvalid} loading={(uploadProgress ?? 100) < 100}>Upload</Button>
                     {typeof uploadProgress !== 'undefined' &&
                         <Progress.Line className={styles.progressBar} percent={uploadProgress} status={uploadProgress === 100 ? 'success' : undefined} />
                     }
