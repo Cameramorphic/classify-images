@@ -4,6 +4,7 @@ import ClassifyRoute from "./ClassifyRoute";
 import ErrorRoute from "./ErrorRoute";
 import RootRoute from "./RootRoute";
 import SearchVideoRoute from "./SearchVideoRoute";
+import AboutRoute from "./AboutRoute";
 
 interface IRoute extends RouteProps {
     title: string;
@@ -40,6 +41,11 @@ export const routes: IRoute[] = [
     {
         title: 'Search Images',
         path: PATHS.SEARCH_VIDEO
+    },
+    {
+        title: 'About',
+        path: PATHS.ABOUT,
+        component: AboutRoute
     },
     {
         title: '404 Error!',
