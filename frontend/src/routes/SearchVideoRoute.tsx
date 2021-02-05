@@ -18,10 +18,8 @@ export default function SearchVideoRoute() {
     const upload = async () => {
         const formData = new FormData();
         const video = videoList[0].blobFile;
-        console.log(category)
 
         if (video) formData.append('video', video);
-        console.log(formData.entries())
         const config: AxiosRequestConfig = {
             onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
         }
@@ -36,8 +34,27 @@ export default function SearchVideoRoute() {
 
         const response = await axios.post(`${API_BASE_URL}/video`, formData, config);
         setResult(response)
-        console.log(result)
 
+        const boundary = "--" + result?.headers['content-type'].replace("multipart/form-data; boundary=", "")
+
+        console.log(boundary)
+
+
+        const parts = result?.data.split(boundary);
+        parts.forEach(function (entry : string) {
+            if (!(entry.length === 0) && !entry.startsWith('--'))
+            {
+                //errorhandling
+                var name_start = entry.search("name=\"(.*)\.jpg\"") + 6
+                var name_end = entry.search("\.jpg\"") + 4;
+                const fileName = entry.substring(name_start, name_end)
+
+
+                let lines = entry.split('\n');
+                const content = lines.slice(3, lines.length).join("\n");
+                const picture = new File([content], fileName)
+            }
+        })
         setUploadProgress(undefined);
     };
     return (
@@ -74,6 +91,7 @@ export default function SearchVideoRoute() {
         </div>
     );
 }
+
 
 function categoriesToJson(s: string | undefined) {
 
