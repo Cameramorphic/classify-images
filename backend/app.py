@@ -85,7 +85,7 @@ def video():
 
 def check_uploaded_file(name, allowed_extensions, allow_no_file=False):
     uploaded_file = request.files.get(name)
-    if uploaded_file.filename == "":
+    if uploaded_file == None or uploaded_file.filename == "":
         return None if allow_no_file else "No file selected, please select a " + name + " file"
     allowed = save_if_allowed(uploaded_file, allowed_extensions)
     if not allowed:

@@ -89,14 +89,16 @@ export default function ClassifyRoute() {
     const [uploadProgress, setUploadProgress] = useState<number>();
     const [result, setResult] = useState<AxiosResponse>();
 
-    const isInputInvalid = imageList.length === 0 || categoryList.length !== 1;
+    const isInputInvalid = imageList.length === 0 || categoryList.length > 1;
 
     const upload = async () => {
         if (isInputInvalid) return;
         const formData = new FormData();
         imageList.forEach(file => file.blobFile && formData.append('files', file.blobFile))
-        const categoryFile = categoryList[0].blobFile;
-        if (categoryFile) formData.append('categories', categoryFile);
+        if (categoryList.length !== 0) {
+            const categoryFile = categoryList[0].blobFile;
+            if (categoryFile) formData.append('categories', categoryFile);
+        }
 
         const config: AxiosRequestConfig = {
             onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
