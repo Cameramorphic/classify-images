@@ -15,6 +15,8 @@ export default function SearchVideoRoute() {
 
     const [result, setResult] = useState<AxiosResponse>();
 
+    const [file, setFile] = useState<File>();
+
     const upload = async () => {
         const formData = new FormData();
         const video = videoList[0].blobFile;
@@ -37,11 +39,11 @@ export default function SearchVideoRoute() {
 
         const boundary = "--" + result?.headers['content-type'].replace("multipart/form-data; boundary=", "")
 
-        console.log(boundary)
+        console.log(result)
 
 
         const parts = result?.data.split(boundary);
-        parts.forEach(function (entry : string) {
+        if (parts) parts.forEach(function (entry : string) {
             if (!(entry.length === 0) && !entry.startsWith('--'))
             {
                 //errorhandling
@@ -50,13 +52,16 @@ export default function SearchVideoRoute() {
                 const fileName = entry.substring(name_start, name_end)
 
 
-                let lines = entry.split('\n');
-                const content = lines.slice(3, lines.length).join("\n");
+                let lines = entry.split('\r\n');
+                const content = lines.slice(3, lines.length).join("n");
                 const picture = new File([content], fileName)
+                setFile(picture)
+                //setFile(URL.createObjectURL(picture))
             }
         })
         setUploadProgress(undefined);
     };
+
     return (
         <div>
             <Form className={styles.form}>
@@ -87,6 +92,7 @@ export default function SearchVideoRoute() {
                         <Progress.Line className={styles.progressBar} percent={uploadProgress} status={uploadProgress === 100 ? 'success' : undefined} />
                     }
                 </div>
+                    <a href={file?URL.createObjectURL(file): undefined} download>Click to download</a>
             </Form>
         </div>
     );
@@ -99,3 +105,7 @@ function categoriesToJson(s: string | undefined) {
     console.log(JSON.stringify(data))
     return JSON.stringify(data);
 }
+
+
+
+
