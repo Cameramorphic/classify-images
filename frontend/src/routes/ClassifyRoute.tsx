@@ -13,45 +13,45 @@ export const dndPlaceholderStyle = {
 };
 const { Paragraph } = Placeholder;
 
-// function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-//     return <FlexboxGrid justify="space-around">{categoryMap &&
-//         imageList.map(img => {
-//             const category = img.name ? categoryMap[img.name] : undefined;
-//             const image_url = URL.createObjectURL(img.blobFile);
-//             return (
-//                 <FlexboxGrid.Item colspan={100}>
-//                     <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
-//                         <img src={image_url} height="240" />
-//                         <Panel header={category}></Panel>
-//                     </Panel>
-//                     </FlexboxGrid.Item>)
-//         })
-//         }</FlexboxGrid>
-// }
-
-const Card = (props: JSX.IntrinsicAttributes & PanelProps<any>) => (
-    <Panel {...props} bordered header="Card title">
-      <Paragraph />
-    </Panel>
-  );
-  
-  function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-return (
-    <Row>
-      <Col md={6} sm={12}>
-        <Card />
-      </Col>
-      <Col md={6} sm={12}>
-        <Card />
-      </Col>
-      <Col md={6} sm={12}>
-        <Card />
-      </Col>
-      <Col md={6} sm={12}>
-        <Card />
-      </Col>
-    </Row>)
+function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
+    return <FlexboxGrid justify="space-around">{categoryMap &&
+        imageList.map(img => {
+            const category = img.name ? categoryMap[img.name] : undefined;
+            const image_url = URL.createObjectURL(img.blobFile);
+            return (
+                <FlexboxGrid.Item colspan={100}>
+                    <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
+                        <img src={image_url} height="240" />
+                        <Panel header={category}></Panel>
+                    </Panel>
+                    </FlexboxGrid.Item>)
+        })
+        }</FlexboxGrid>
 }
+
+// const Card = (props: JSX.IntrinsicAttributes & PanelProps<any>) => (
+//     <Panel {...props} bordered header="Card title">
+//       <Paragraph />
+//     </Panel>
+//   );
+  
+//   function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
+// return (
+//     <Row>
+//       <Col md={6} sm={12}>
+//         <Card />
+//       </Col>
+//       <Col md={6} sm={12}>
+//         <Card />
+//       </Col>
+//       <Col md={6} sm={12}>
+//         <Card />
+//       </Col>
+//       <Col md={6} sm={12}>
+//         <Card />
+//       </Col>
+//     </Row>)
+// }
 
 // function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
     
