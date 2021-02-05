@@ -117,7 +117,7 @@ export default function ClassifyRoute() {
                         name='files'
                         fileList={imageList}
                         onChange={setImageList}
-                        accept='.png,.jpg'
+                        accept='.png,.jpg,.jpeg'
                         multiple
                         draggable
                         autoUpload={false}
