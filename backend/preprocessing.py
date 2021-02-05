@@ -23,18 +23,17 @@ def predict_multiple(by_image):
     images = []
     imagenames = []
     for filename in os.listdir(dir):
-        if filename.endswith(".png") or filename.endswith(".jpg"):
+        if app.is_allowed(filename, app.ALLOWED_IMAGE_EXTS):
             with Image.open(os.path.join(dir, filename)) as image:
                 images.append(preprocess(image.convert("RGB")))
             imagenames.append(filename)
         elif filename.endswith(".csv"):
             texts = open(os.path.join(dir, filename)).read().split(',')
-            print('categories set to: ' + ' - '.join(texts))
         elif filename.endswith(".json"):
-                    file = open(os.path.join(dir, filename))
-                    texts = json.loads(file.read())["categories"]
-                    print('categories set to: ' + ' - '.join(texts))
-                    file.close()
+            file = open(os.path.join(dir, filename))
+            texts = json.loads(file.read())["categories"]
+            file.close()
+    print('categories set to: ' + ' - '.join(texts))
     if not texts:
         texts = open("/app/default-list.csv").read().split(',')
 
