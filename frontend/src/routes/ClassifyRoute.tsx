@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel , Row, Col} from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel , Row, Col, Grid, FlexboxGrid, PanelGroup, Placeholder, PanelProps} from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
+
 
 import styles from './ClassifyRoute.module.css';
 
@@ -10,25 +11,77 @@ export const API_BASE_URL = 'http://localhost:8080';
 export const dndPlaceholderStyle = {
     lineHeight: '62px',
 };
+const { Paragraph } = Placeholder;
 
-//return <PanelImage file={img} category={category} />
-//URL.createObjectURL(imageList[0].blobFile)
-//<Panel header={JSON.stringify(imageList[0].name && result?.data[imageList[0].name], undefined, 2)}>
-function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-    return <div>{categoryMap &&
-        imageList.map(img => {
-            const category = img.name ? categoryMap[img.name] : undefined;
-            const image_url = URL.createObjectURL(img.blobFile);
-            return (
-                <Col md={6} sm={12}>
-                    <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
-                        <img src={image_url} height="240" />
-                        <Panel header={category}></Panel>
-                    </Panel>
-                </Col>)
-        })
-    }</div>
+// function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
+//     return <FlexboxGrid justify="space-around">{categoryMap &&
+//         imageList.map(img => {
+//             const category = img.name ? categoryMap[img.name] : undefined;
+//             const image_url = URL.createObjectURL(img.blobFile);
+//             return (
+//                 <FlexboxGrid.Item colspan={100}>
+//                     <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
+//                         <img src={image_url} height="240" />
+//                         <Panel header={category}></Panel>
+//                     </Panel>
+//                     </FlexboxGrid.Item>)
+//         })
+//         }</FlexboxGrid>
+// }
+
+const Card = (props: JSX.IntrinsicAttributes & PanelProps<any>) => (
+    <Panel {...props} bordered header="Card title">
+      <Paragraph />
+    </Panel>
+  );
+  
+  function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
+return (
+    <Row>
+      <Col md={6} sm={12}>
+        <Card />
+      </Col>
+      <Col md={6} sm={12}>
+        <Card />
+      </Col>
+      <Col md={6} sm={12}>
+        <Card />
+      </Col>
+      <Col md={6} sm={12}>
+        <Card />
+      </Col>
+    </Row>)
 }
+
+// function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
+    
+//     return <FlexboxGrid justify="space-around">
+//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+//         <img src="https://via.placeholder.com/240x240" height="240" />
+//                         <Panel header={'hi'}></Panel>
+//         </Panel> </FlexboxGrid.Item>
+//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+//         <img src="https://via.placeholder.com/240x240" height="240" />
+//                         <Panel header={'hi'}></Panel>
+//         </Panel> </FlexboxGrid.Item>
+//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+//         <img src="https://via.placeholder.com/240x240" height="240" />
+//                         <Panel header={'hi'}></Panel>
+//         </Panel> </FlexboxGrid.Item>
+//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+//         <img src="https://via.placeholder.com/240x240" height="240" />
+//                         <Panel header={'hi'}></Panel>
+//         </Panel> </FlexboxGrid.Item>
+//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+//         <img src="https://via.placeholder.com/240x240" height="240" />
+//                         <Panel header={'hi'}></Panel>
+//         </Panel> </FlexboxGrid.Item>
+//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+//         <img src="https://via.placeholder.com/240x240" height="240" />
+//                         <Panel header={'hi'}></Panel>
+//         </Panel> </FlexboxGrid.Item>
+//   </FlexboxGrid>
+// }
 
 export default function ClassifyRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
@@ -92,7 +145,6 @@ export default function ClassifyRoute() {
                     }
                 </div>
             </Form>
-            <div style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result?.data, undefined, 2)}</div>
             <ImagePanel categoryMap={result?.data} imageList={imageList}/>
         </div>
     );
