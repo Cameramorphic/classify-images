@@ -9,6 +9,7 @@ import torch
 from flask import Response
 from PIL import Image
 from requests_toolbelt import MultipartEncoder
+import base64
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
@@ -91,31 +92,12 @@ def video_retrieval():
     print(probs)
     print(imagenames)
 
-    filepaths = []
+    result = {}
     for i in range(len(texts)):
-        filepaths.append(saveImageFromVideo(videopath, np.argmax(probs[i])))
-
-    text_file_time = {}
-    for i in range(len(texts)):
-        text_file_time[texts[i]] = {filepaths[i]: str(np.argmax(probs[i]))}
-
-    name = os.path.join(app.app.config['UPLOAD_FOLDER'], 'data.json')
-
-    print(filepaths)
-
-
-    with open(name, 'w', encoding='utf-8') as f:
-        json.dump(text_file_time, f, ensure_ascii=False, indent=4)
-        #filepaths.append(name)
-    m = MultipartEncoder(
-        fields={
-            fname: open(fname, 'rb') for fname in filepaths}
-    )
-
-    return Response(m.to_string(), mimetype=m.content_type)
-    #results = ['<tr><td>' + key + ': </td><td>' + text_prob[key] + '</td></tr>' for key in text_prob]
-    #return '<table>' + ' '.join(results) + '</table>'
-
+        filepath = saveImageFromVideo(videopath, np.argmax(probs[i]))
+        with open(filepath, "rb") as image_file:
+            result[texts[i]] = str(base64.b64encode(image_file.read()))
+    return json.dumps(result)
 
 def extractImages(pathIn):
     images = []
