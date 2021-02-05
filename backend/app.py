@@ -38,11 +38,13 @@ SELECT_VID_FILES_HTML = '''
 ALLOWED_IMAGE_EXTS = {'png', 'jpg', 'jpeg'}
 ALLOWED_CATEGORIES_EXTS = {'csv', 'json'}
 ALLOWED_VIDEO_EXTS = {'mp4'}
+def is_allowed(filename, exts):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in exts
 def save_if_allowed(file, exts):
-    is_allowed = '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in exts
-    if is_allowed:
+    allowed = is_allowed(file.filename, exts)
+    if allowed:
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-    return is_allowed
+    return allowed
 
 #CSV FILE SHOULD ONLY HAVE , between words, NO SPACES!
 @app.route("/categorize", methods=['GET', 'POST'])
