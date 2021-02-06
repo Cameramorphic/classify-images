@@ -10,7 +10,7 @@ import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 
 function ImagePanel({imageMap}: {imageMap: {[key: string]: string}}) {
     var panels = [];
-    
+
     for (var key in imageMap ){
         console.log('IMAGEKEYIMAGEKEY');
         var image_content = imageMap[key].substring(2, imageMap[key].length-2);
@@ -47,12 +47,15 @@ export default function SearchVideoRoute() {
             onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
         }
 
-
-        const blob = new Blob([categoriesToJson(category)], {
-        type: 'application/json'
-        });
-        const file = new File([blob], 'categories.json')
-        formData.append('categories', file, 'categories.json');
+        //only appends json categories file if at least one category is defined
+        const json = categoriesToJson(category)
+        if (json) {
+            const blob = new Blob([json], {
+                type: 'application/json'
+            });
+            const file = new File([blob], 'categories.json')
+            formData.append('categories', file, 'categories.json');
+        }
 
 
         const response = await axios.post(`${API_BASE_URL}/video`, formData, config);
@@ -90,7 +93,6 @@ export default function SearchVideoRoute() {
                         <Progress.Line className={styles.progressBar} percent={uploadProgress} status={uploadProgress === 100 ? 'success' : undefined} />
                     }
                 </div>
-                    <a href={file?URL.createObjectURL(file): undefined} download>Click to download</a>
             </Form>
             <ImagePanel imageMap={result?.data}/>
         </div>
@@ -100,9 +102,21 @@ export default function SearchVideoRoute() {
 
 function categoriesToJson(s: string | undefined) {
 
-    var data = {"categories": [s]}
+    if (s) {
+        //replaces multiple whitespaces with only one and replaces semicolons with ','
+        const categoriesWithoutMultipleWhitespaces = s?.replace(/\s\s+/g, ' ')
+            .replaceAll(';', ',');
+        //trims leading and ending whitespaces
+        var categories = categoriesWithoutMultipleWhitespaces.split(',')
+        for (let i = 0; i < categories.length; i++) {
+            categories[i] = categories[i].trim()
+        }
+    var data = {"categories": categories}
     console.log(JSON.stringify(data))
     return JSON.stringify(data);
+    }
+    return undefined;
+
 }
 
 
