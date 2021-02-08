@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel, FlexboxGrid, Placeholder} from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
+import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
 
 import styles from './ClassifyRoute.module.css';
 
@@ -11,22 +12,23 @@ export const API_BASE_URL = 'http://localhost:8080';
 export const dndPlaceholderStyle = {
     lineHeight: '62px',
 };
-const { Paragraph } = Placeholder;
 
-function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-    return <FlexboxGrid justify="space-around">{categoryMap &&
-        imageList.map(img => {
-            const category = img.name ? categoryMap[img.name] : undefined;
-            const image_url = URL.createObjectURL(img.blobFile);
-            return (
-                <FlexboxGrid.Item colspan={100}>
-                    <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }} key={image_url}>
-                        <img src={image_url} height="240" />
-                        <Panel header={category}></Panel>
-                    </Panel>
-                    </FlexboxGrid.Item>)
-        })
-        }</FlexboxGrid>
+function ImagePanel({ categoryMap, imageList }: { categoryMap: { [key: string]: string }, imageList: FileType[] }) {
+    return <ImageGrid>
+        {categoryMap &&
+            imageList.map(img => {
+                const category = img.name ? categoryMap[img.name] : undefined;
+                const image_url = URL.createObjectURL(img.blobFile);
+                return (
+                    <ImageGridItem key={image_url}
+                        imageUrl={image_url}
+                        title={category}
+                        subtitle={img.name}
+                    />
+                );
+            })
+        }
+    </ImageGrid>
 }
 
 export default function ClassifyRoute() {
@@ -91,7 +93,7 @@ export default function ClassifyRoute() {
                     }
                 </div>
             </Form>
-            <ImagePanel categoryMap={result?.data} imageList={imageList}/>
+            <ImagePanel categoryMap={result?.data} imageList={imageList} />
         </div>
     );
 }
