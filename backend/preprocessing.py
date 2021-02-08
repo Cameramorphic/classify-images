@@ -32,7 +32,7 @@ def predict_multiple(by_image):
             try:
                 texts = open(os.path.join(dir, filename)).read().split(',')
             except UnicodeDecodeError:
-                return app.error_to_json(
+                return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
         elif filename.endswith(".json"):
             try:
@@ -40,7 +40,7 @@ def predict_multiple(by_image):
                 texts = json.loads(file.read())["categories"]
                 file.close()
             except UnicodeDecodeError:
-                return app.error_to_json(
+                return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
     print('categories set to: ' + ' - '.join(texts))
     if not texts:
@@ -64,7 +64,7 @@ def predict_multiple(by_image):
     # m = np.argmax(probs, axis=-1)
     # res = [imagenames[i] + " :  " + texts[i] for i in m]
     # return '<table>' + ' '.join(results) + '</table>'
-    return json.dumps(dic)
+    return Response(json.dumps(dic), status=201, mimetype='application/json')
 
 # currently only one video at a time (but with multiple textual descriptions)
 def video_retrieval():
@@ -83,7 +83,7 @@ def video_retrieval():
                 texts = open(os.path.join(dir, filename)).read().split(',')
                 print('categories set to: ' + ' - '.join(texts))
             except UnicodeDecodeError:
-                return app.error_to_json(
+                return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
         elif filename.endswith(".json"):
             try:
@@ -92,7 +92,7 @@ def video_retrieval():
                 print('categories set to: ' + ' - '.join(texts))
                 file.close()
             except UnicodeDecodeError:
-                return app.error_to_json(
+                return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
     if not texts:
         texts = open(os.path.join(dir, filename)).read().split(',')
@@ -113,7 +113,7 @@ def video_retrieval():
         filepath = saveImageFromVideo(videopath, np.argmax(probs[i]))
         with open(filepath, "rb") as image_file:
             result[texts[i]] = str(base64.b64encode(image_file.read()))
-    return json.dumps(result)
+    return Response(json.dumps(result), status=201, mimetype='application/json')
 
 def extractImages(pathIn):
     images = []
