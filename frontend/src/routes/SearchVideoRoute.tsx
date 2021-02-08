@@ -13,7 +13,6 @@ function ImagePanel({imageMap}: {imageMap: {[key: string]: string}}) {
 
     for (var key in imageMap ){
         var image_content = imageMap[key].substring(2, imageMap[key].length-1);
-        console.log(image_content)
         var image_url = 'data:image/jpeg;base64,' + image_content;
         panels.push((
             <FlexboxGrid.Item colspan={100}>
@@ -36,31 +35,33 @@ export default function SearchVideoRoute() {
 
     const [result, setResult] = useState<AxiosResponse>();
 
-    const [file, setFile] = useState<File>();
+    const isInputInvalid = videoList.length === 0 || category == undefined;
+
 
     const upload = async () => {
         const formData = new FormData();
-        const video = videoList[0].blobFile;
 
-        if (video) formData.append('video', video);
-        const config: AxiosRequestConfig = {
-            onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
+        if (videoList[0]) {
+            const video = videoList[0].blobFile;
+            if (video) formData.append('video', video);
+            const config: AxiosRequestConfig = {
+                onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
+            }
+
+            //only appends json categories file if at least one category is defined
+            const json = categoriesToJson(category)
+            if (json) {
+                const blob = new Blob([json], {
+                    type: 'application/json'
+                });
+                const file = new File([blob], 'categories.json')
+                formData.append('categories', file, 'categories.json');
+            }
+
+            const response = await axios.post(`${API_BASE_URL}/video`, formData, config);
+            setResult(response)
+            setUploadProgress(undefined);
         }
-
-        //only appends json categories file if at least one category is defined
-        const json = categoriesToJson(category)
-        if (json) {
-            const blob = new Blob([json], {
-                type: 'application/json'
-            });
-            const file = new File([blob], 'categories.json')
-            formData.append('categories', file, 'categories.json');
-        }
-
-
-        const response = await axios.post(`${API_BASE_URL}/video`, formData, config);
-        setResult(response)
-        setUploadProgress(undefined);
     };
 
     return (
@@ -72,7 +73,10 @@ export default function SearchVideoRoute() {
                         name='video'
                         accept='.mp4'
                         fileList={videoList}
-                        onChange={list => setVideoList([list[list.length - 1]])}
+                        onChange={list => {
+                            if (list.length > 1) setVideoList([list[list.length - 1]])
+                            else setVideoList(list)
+                        }}
                         draggable
                         autoUpload={false}
                     >
@@ -88,11 +92,12 @@ export default function SearchVideoRoute() {
                     />
                 </FormGroup>
                 <div className={styles.uploadControls}>
-                    <Button onClick={upload} loading={(uploadProgress ?? 100) < 100}>Upload</Button>
+                    <Button onClick={upload} disabled={isInputInvalid} loading={(uploadProgress ?? 100) < 100}>Upload</Button>
                     {typeof uploadProgress !== 'undefined' &&
                         <Progress.Line className={styles.progressBar} percent={uploadProgress} status={uploadProgress === 100 ? 'success' : undefined} />
                     }
                 </div>
+
             </Form>
             <ImagePanel imageMap={result?.data}/>
         </div>
