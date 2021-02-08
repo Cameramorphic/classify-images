@@ -1,36 +1,32 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel, FlexboxGrid, Placeholder } from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
-import styles from './ClassifyRoute.module.css';
+import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
 
-export const API_BASE_URL = 'http://localhost:8080';
-export const dndPlaceholderStyle = {
-    lineHeight: '62px',
-};
+import { API_BASE_URL, dndPlaceholderStyle } from './ClassifyRoute';
 
-function ImagePanel({imageMap, imageList}: {imageMap: {[key: string]: string}, imageList : FileType[]}) {
+import styles from './SearchImageRoute.module.css';
+
+function ImagePanel({ imageMap, imageList }: { imageMap: { [key: string]: string }, imageList: FileType[] }) {
     var panels = [];
-    var imageNames = imageList.map(img => img.name);
 
-    for (var key in imageMap){
-        var image_index = imageNames.findIndex(x => x===imageMap[key]);
-        var image = imageList[image_index];
+    for (const key in imageMap) {
+        var image = imageList.find(x => x.name === imageMap[key]);
+        if (!image) continue;
         var image_url = URL.createObjectURL(image.blobFile);
-        panels.push((
-            <FlexboxGrid.Item colspan={100}>
-                <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240}}>
-                <img src={image_url} height="240" />
-                    <Panel header={key + '\n('+ image.name +')'}></Panel>
-                </Panel>
-                </FlexboxGrid.Item>));
+        panels.push(
+            <ImageGridItem key={key}
+                imageUrl={image_url}
+                title={key}
+                subtitle={image?.name}
+            />
+        );
     }
 
-    return (<FlexboxGrid justify="space-around">{
-        imageMap && panels
-    }</FlexboxGrid>)
+    return <ImageGrid>{panels}</ImageGrid>;
 }
 
 export default function SearchImageRoute() {
@@ -93,7 +89,7 @@ export default function SearchImageRoute() {
                     }
                 </div>
             </Form>
-            <ImagePanel imageMap={result?.data} imageList={imageList}/>
+            <ImagePanel imageMap={result?.data} imageList={imageList} />
         </div>
     );
 }

@@ -1,31 +1,30 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {Form, FormGroup, ControlLabel, Uploader, Button, FormControl, Progress, Panel, FlexboxGrid} from 'rsuite';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { Form, FormGroup, ControlLabel, Uploader, Button, FormControl, Progress } from 'rsuite';
+import { FileType } from "rsuite/lib/Uploader";
 
-import {API_BASE_URL, dndPlaceholderStyle} from './ClassifyRoute';
+import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
+
+import { API_BASE_URL, dndPlaceholderStyle } from './ClassifyRoute';
 
 import styles from './SearchVideoRoute.module.css';
-import {FileType} from "rsuite/lib/Uploader";
-import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 
-function ImagePanel({imageMap}: {imageMap: {[key: string]: string}}) {
+function ImagePanel({ imageMap }: { imageMap: { [key: string]: string } }) {
     var panels = [];
 
-    for (var key in imageMap ){
-        var image_content = imageMap[key].substring(2, imageMap[key].length-1);
+    for (const key in imageMap) {
+        var image_content = imageMap[key].substring(2, imageMap[key].length - 1);
         var image_url = 'data:image/jpeg;base64,' + image_content;
-        panels.push((
-            <FlexboxGrid.Item colspan={100}>
-                <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240}}>
-                <img src={image_url} height="240" />
-                    <Panel header={key}></Panel>
-                </Panel>
-                </FlexboxGrid.Item>));
+        panels.push(
+            <ImageGridItem key={key}
+                imageUrl={image_url}
+                title={key}
+            />
+        );
     }
 
-    return (<FlexboxGrid justify="space-around">{
-        imageMap && panels
-    }</FlexboxGrid>)
+    return <ImageGrid>{panels}</ImageGrid>;
 }
 
 export default function SearchVideoRoute() {
@@ -35,7 +34,7 @@ export default function SearchVideoRoute() {
 
     const [result, setResult] = useState<AxiosResponse>();
 
-    const isInputInvalid = videoList.length === 0 || category == undefined;
+    const isInputInvalid = videoList.length === 0 || category === undefined;
 
 
     const upload = async () => {
@@ -99,7 +98,7 @@ export default function SearchVideoRoute() {
                 </div>
 
             </Form>
-            <ImagePanel imageMap={result?.data}/>
+            <ImagePanel imageMap={result?.data} />
         </div>
     );
 }
@@ -116,9 +115,9 @@ function categoriesToJson(s: string | undefined) {
         for (let i = 0; i < categories.length; i++) {
             categories[i] = categories[i].trim()
         }
-    var data = {"categories": categories}
-    console.log(JSON.stringify(data))
-    return JSON.stringify(data);
+        var data = { "categories": categories }
+        console.log(JSON.stringify(data))
+        return JSON.stringify(data);
     }
     return undefined;
 

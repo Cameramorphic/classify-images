@@ -17,7 +17,7 @@ app.config['UPLOAD_FOLDER'] = '/app/uploads/'
 # This is necessary so that the kubernetes load balancer can perform health checks
 @app.route("/", methods=['GET'])
 def hello():
-    return "Welcome to classify-images. categorize files at /categorize "
+    return Response("Welcome to classify-images. categorize files at /categorize ", status=200, mimetype='text/plain')
 
 SELECT_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">   
