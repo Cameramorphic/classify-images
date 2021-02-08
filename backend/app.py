@@ -46,13 +46,17 @@ def save_if_allowed(file, exts):
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     return allowed
 
+def error_to_json(error):
+    dict = {'error' : error}
+    return json.dumps(dict)
+
 #CSV FILE SHOULD ONLY HAVE , between words, NO SPACES!
 @app.route("/categorize", methods=['GET', 'POST'])
 def categorize():
     if request.method != 'POST':
         return SELECT_FILES_HTML
     error = upload_images_and_categories_file(True)
-    return error if error else preprocessing.predict_multiple(True)
+    return error_to_json(error) if error else preprocessing.predict_multiple(True)
     #return send_file(results_path, as_attachment=True, attachment_filename='results.csv')
 
 @app.route("/image", methods=['GET', 'POST'])
@@ -60,7 +64,7 @@ def image():
     if request.method != 'POST':
         return SELECT_FILES_HTML
     error = upload_images_and_categories_file(False)
-    return error if error else preprocessing.predict_multiple(False)
+    return error_to_json(error) if error else preprocessing.predict_multiple(False)
 
 def upload_images_and_categories_file(allow_no_categories_file):
     uploaded_files = request.files.getlist("files")
@@ -82,7 +86,7 @@ def video():
     video_error = check_uploaded_file("video", ALLOWED_VIDEO_EXTS)
     categories_error = check_uploaded_file("categories", ALLOWED_CATEGORIES_EXTS, True)
     if video_error is not None or categories_error is not None:
-        return video_error if categories_error is None else categories_error
+        return error_to_json(video_error if categories_error is None else categories_error)
     return preprocessing.video_retrieval()
 
 def check_uploaded_file(name, allowed_extensions, allow_no_file=False):

@@ -29,11 +29,19 @@ def predict_multiple(by_image):
                 images.append(preprocess(image.convert("RGB")))
             imagenames.append(filename)
         elif filename.endswith(".csv"):
-            texts = open(os.path.join(dir, filename)).read().split(',')
+            try:
+                texts = open(os.path.join(dir, filename)).read().split(',')
+            except UnicodeDecodeError:
+                return app.error_to_json(
+                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
         elif filename.endswith(".json"):
-            file = open(os.path.join(dir, filename))
-            texts = json.loads(file.read())["categories"]
-            file.close()
+            try:
+                file = open(os.path.join(dir, filename))
+                texts = json.loads(file.read())["categories"]
+                file.close()
+            except UnicodeDecodeError:
+                return app.error_to_json(
+                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
     print('categories set to: ' + ' - '.join(texts))
     if not texts:
         texts = open("/app/default-list.csv").read().split(',')
@@ -71,13 +79,21 @@ def video_retrieval():
             images, secs = extractImages(videopath)
             images = [preprocess(image.convert("RGB")) for image in images]
         elif filename.endswith(".csv"):
-            texts = open(os.path.join(dir, filename)).read().split(',')
-            print('categories set to: ' + ' - '.join(texts))
+            try:
+                texts = open(os.path.join(dir, filename)).read().split(',')
+                print('categories set to: ' + ' - '.join(texts))
+            except UnicodeDecodeError:
+                return app.error_to_json(
+                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
         elif filename.endswith(".json"):
-            file = open(os.path.join(dir, filename))
-            texts = json.loads(file.read())["categories"]
-            print('categories set to: ' + ' - '.join(texts))
-            file.close()
+            try:
+                file = open(os.path.join(dir, filename))
+                texts = json.loads(file.read())["categories"]
+                print('categories set to: ' + ' - '.join(texts))
+                file.close()
+            except UnicodeDecodeError:
+                return app.error_to_json(
+                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
     if not texts:
         texts = open(os.path.join(dir, filename)).read().split(',')
 
