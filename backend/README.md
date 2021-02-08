@@ -35,7 +35,7 @@ Note that the pictures all need to have the form-data name "files" and the json 
 It returns a json file in the form of {"filename": "category"}. This means it tries to match a category for each picture.
 
 #### /image (POST)
-Takes multiple pictures with the format jpg/jpeg and a json file. This has to be send as multipart/form-data to the backend.
+Takes multiple pictures with the format png/jpg/jpeg and a json file. This has to be send as multipart/form-data to the backend.
 Note that the pictures all need to have the form-data name "files" and the json as well as the csv file need to be named "categories".
 It returns a json file in the form of {"category": "filename"}. This means it tries to match each category to the best fit image.
 
@@ -44,7 +44,7 @@ It returns a json file in the form of {"category": "filename"}. This means it tr
 Takes one video in the format of mp4 and a json file. This has to be send as multipart/form-data to the backend.
 Note that the video has to be named "video" in the form-data object and the json needs to be named "categories" before sending them to the backend.
 It returns for each defined category the best fit extracted picture. This picture has the jpg-format and is sent base64 encoded
-as json, {"Categories": ["filename", "base64encoded"]}.
+as json, {"Category": ["base64encodedFile", "Probability", "TimeInSeconds"]}.
 
 
 
