@@ -10,11 +10,10 @@ import { API_BASE_URL, dndPlaceholderStyle } from './ClassifyRoute';
 
 import styles from './SearchVideoRoute.module.css';
 
-function ImagePanel({ imageMap }: { imageMap: { [key: string]: string } }) {
+function ImagePanel({ imageMap }: { imageMap: { [key: string]: string[]  } }) {
     var panels = [];
-
     for (const key in imageMap) {
-        var image_content = imageMap[key].substring(2, imageMap[key].length - 1);
+        var image_content = imageMap[key][0].substring(2, imageMap[key][0].length - 1);
         var image_url = 'data:image/jpeg;base64,' + image_content;
         panels.push(
             <ImageGridItem key={key}
@@ -116,7 +115,6 @@ function categoriesToJson(s: string | undefined) {
             categories[i] = categories[i].trim()
         }
         var data = { "categories": categories }
-        console.log(JSON.stringify(data))
         return JSON.stringify(data);
     }
     return undefined;

@@ -130,10 +130,11 @@ def video_retrieval():
     print(imagenames)
 
     result = {}
+
     for i in range(len(texts)):
         filepath = saveImageFromVideo(videopath, np.argmax(probs[i]))
         with open(filepath, "rb") as image_file:
-            result[texts[i]] = str(base64.b64encode(image_file.read()))
+            result[texts[i]] = [str(base64.b64encode(image_file.read())), str(probs[i][np.argmax(probs[i])] * 100), str(np.argmax(probs[i]))]
     return Response(json.dumps(result), status=201, mimetype='application/json')
 
 def extractImages(pathIn):
