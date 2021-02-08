@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel, FlexboxGrid, Placeholder } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import styles from './ClassifyRoute.module.css';
@@ -10,6 +10,28 @@ export const API_BASE_URL = 'http://localhost:8080';
 export const dndPlaceholderStyle = {
     lineHeight: '62px',
 };
+
+function ImagePanel({imageMap, imageList}: {imageMap: {[key: string]: string}, imageList : FileType[]}) {
+    var panels = [];
+    var imageNames = imageList.map(img => img.name);
+
+    for (var key in imageMap){
+        var image_index = imageNames.findIndex(x => x===imageMap[key]);
+        var image = imageList[image_index];
+        var image_url = URL.createObjectURL(image.blobFile);
+        panels.push((
+            <FlexboxGrid.Item colspan={100}>
+                <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240}}>
+                <img src={image_url} height="240" />
+                    <Panel header={key + '\n('+ image.name +')'}></Panel>
+                </Panel>
+                </FlexboxGrid.Item>));
+    }
+
+    return (<FlexboxGrid justify="space-around">{
+        imageMap && panels
+    }</FlexboxGrid>)
+}
 
 export default function SearchImageRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
@@ -71,7 +93,7 @@ export default function SearchImageRoute() {
                     }
                 </div>
             </Form>
-            <div style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result?.data, undefined, 2)}</div>
+            <ImagePanel imageMap={result?.data} imageList={imageList}/>
         </div>
     );
 }

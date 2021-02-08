@@ -12,7 +12,6 @@ function ImagePanel({imageMap}: {imageMap: {[key: string]: string}}) {
     var panels = [];
 
     for (var key in imageMap ){
-        console.log('IMAGEKEYIMAGEKEY');
         var image_content = imageMap[key].substring(2, imageMap[key].length-1);
         console.log(image_content)
         var image_url = 'data:image/jpeg;base64,' + image_content;

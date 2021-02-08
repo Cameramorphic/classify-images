@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel , Row, Col, Grid, FlexboxGrid, PanelGroup, Placeholder, PanelProps} from 'rsuite';
+import { Form, FormGroup, ControlLabel, Uploader, Button, Progress, Panel, FlexboxGrid, Placeholder} from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 
@@ -29,60 +29,6 @@ function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: stri
         }</FlexboxGrid>
 }
 
-// const Card = (props: JSX.IntrinsicAttributes & PanelProps<any>) => (
-//     <Panel {...props} bordered header="Card title">
-//       <Paragraph />
-//     </Panel>
-//   );
-  
-//   function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-// return (
-//     <Row>
-//       <Col md={6} sm={12}>
-//         <Card />
-//       </Col>
-//       <Col md={6} sm={12}>
-//         <Card />
-//       </Col>
-//       <Col md={6} sm={12}>
-//         <Card />
-//       </Col>
-//       <Col md={6} sm={12}>
-//         <Card />
-//       </Col>
-//     </Row>)
-// }
-
-// function ImagePanel({categoryMap, imageList}: {categoryMap: {[key: string]: string}, imageList : FileType[]}) {
-    
-//     return <FlexboxGrid justify="space-around">
-//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-//         <img src="https://via.placeholder.com/240x240" height="240" />
-//                         <Panel header={'hi'}></Panel>
-//         </Panel> </FlexboxGrid.Item>
-//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-//         <img src="https://via.placeholder.com/240x240" height="240" />
-//                         <Panel header={'hi'}></Panel>
-//         </Panel> </FlexboxGrid.Item>
-//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-//         <img src="https://via.placeholder.com/240x240" height="240" />
-//                         <Panel header={'hi'}></Panel>
-//         </Panel> </FlexboxGrid.Item>
-//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-//         <img src="https://via.placeholder.com/240x240" height="240" />
-//                         <Panel header={'hi'}></Panel>
-//         </Panel> </FlexboxGrid.Item>
-//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-//         <img src="https://via.placeholder.com/240x240" height="240" />
-//                         <Panel header={'hi'}></Panel>
-//         </Panel> </FlexboxGrid.Item>
-//         <FlexboxGrid.Item colspan={100}> <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-//         <img src="https://via.placeholder.com/240x240" height="240" />
-//                         <Panel header={'hi'}></Panel>
-//         </Panel> </FlexboxGrid.Item>
-//   </FlexboxGrid>
-// }
-
 export default function ClassifyRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
@@ -107,8 +53,6 @@ export default function ClassifyRoute() {
         setResult(response);
         setUploadProgress(undefined);
     };
-
- 
 
     return (
         <div>
