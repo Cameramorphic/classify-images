@@ -9,7 +9,8 @@ export default function Footer() {
         <div className={containerClass}>
             <div className={styles.footer}>
                 <div className={styles.copyright}>
-                    Copyright &copy; {new Date().getFullYear()} ClassifyImages GmbH
+                    Copyright &copy; {new Date().getFullYear()} Höhing, Nils; Rittenschober, Johann; Schuschnig, Ricarda; Schwarzer, Tobias;
+
                 </div>
             </div>
         </div>
