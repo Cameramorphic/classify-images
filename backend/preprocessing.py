@@ -25,15 +25,21 @@ def predict_multiple(by_image):
     imagenames = []
     for filename in os.listdir(dir):
         if app.is_allowed(filename, app.ALLOWED_IMAGE_EXTS):
-            with Image.open(os.path.join(dir, filename)) as image:
-                images.append(preprocess(image.convert("RGB")))
-            imagenames.append(filename)
+            try:
+                with Image.open(os.path.join(dir, filename)) as image:
+                   images.append(preprocess(image.convert("RGB")))
+                imagenames.append(filename)
+            except:
+                return app.error_response("Invalid image, the file " + filename + " seems to be broken")
         elif filename.endswith(".csv"):
             try:
                 texts = open(os.path.join(dir, filename)).read().split(',')
             except UnicodeDecodeError:
                 return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+            except:
+                return app.error_response(
+                    "Invalid csv file, please check the syntax of " + filename)
         elif filename.endswith(".json"):
             try:
                 file = open(os.path.join(dir, filename))
@@ -42,6 +48,9 @@ def predict_multiple(by_image):
             except UnicodeDecodeError:
                 return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+            except:
+                return app.error_response(
+                    "Invalid json file, please check the syntax of " + filename)
     print('categories set to: ' + ' - '.join(texts))
     if not texts:
         texts = open("/app/default-list.csv").read().split(',')
@@ -75,9 +84,12 @@ def video_retrieval():
     videopath = ''
     for filename in os.listdir(dir):
         if filename.endswith(".mp4"):
-            videopath = os.path.join(dir, filename)
-            images, secs = extractImages(videopath)
-            images = [preprocess(image.convert("RGB")) for image in images]
+            try:
+                videopath = os.path.join(dir, filename)
+                images, secs = extractImages(videopath)
+                images = [preprocess(image.convert("RGB")) for image in images]
+            except:
+                return app.error_response("Invalid video, the file " + filename + " seems to be broken")
         elif filename.endswith(".csv"):
             try:
                 texts = open(os.path.join(dir, filename)).read().split(',')
@@ -85,6 +97,9 @@ def video_retrieval():
             except UnicodeDecodeError:
                 return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+            except:
+                return app.error_response(
+                    "Invalid csv file, please check the syntax of " + filename)
         elif filename.endswith(".json"):
             try:
                 file = open(os.path.join(dir, filename))
@@ -94,6 +109,9 @@ def video_retrieval():
             except UnicodeDecodeError:
                 return app.error_response(
                     "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+            except:
+                return app.error_response(
+                    "Invalid json file, please check the syntax of " + filename)
     if not texts:
         texts = open(os.path.join(dir, filename)).read().split(',')
 
