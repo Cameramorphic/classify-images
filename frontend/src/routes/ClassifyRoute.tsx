@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
+import { useAPI } from 'hooks/useAPI';
 
 import styles from './ClassifyRoute.module.css';
 
@@ -34,8 +34,8 @@ function ImagePanel({ categoryMap, imageList }: { categoryMap: { [key: string]: 
 export default function ClassifyRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
-    const [uploadProgress, setUploadProgress] = useState<number>();
-    const [result, setResult] = useState<AxiosResponse>();
+
+    const { loading, progress, data, executePost } = useAPI({ path: 'categorize' });
 
     const isInputInvalid = imageList.length === 0 || categoryList.length > 1;
 
@@ -47,13 +47,7 @@ export default function ClassifyRoute() {
             const categoryFile = categoryList[0].blobFile;
             if (categoryFile) formData.append('categories', categoryFile);
         }
-
-        const config: AxiosRequestConfig = {
-            onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
-        }
-        const response = await axios.post(`${API_BASE_URL}/categorize`, formData, config);
-        setResult(response);
-        setUploadProgress(undefined);
+        await executePost(formData);
     };
 
     return (
@@ -87,13 +81,13 @@ export default function ClassifyRoute() {
                     </Uploader>
                 </FormGroup>
                 <div className={styles.uploadControls}>
-                    <Button onClick={upload} disabled={isInputInvalid} loading={(uploadProgress ?? 100) < 100}>Upload</Button>
-                    {typeof uploadProgress !== 'undefined' &&
-                        <Progress.Line className={styles.progressBar} percent={uploadProgress} status={uploadProgress === 100 ? 'success' : undefined} />
+                    <Button onClick={upload} disabled={isInputInvalid} loading={loading}>Upload</Button>
+                    {typeof progress !== 'undefined' &&
+                        <Progress.Line className={styles.progressBar} percent={progress} status={progress === 100 ? 'success' : undefined} />
                     }
                 </div>
             </Form>
-            <ImagePanel categoryMap={result?.data} imageList={imageList} />
+            <ImagePanel categoryMap={data} imageList={imageList} />
         </div>
     );
 }

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { Form, FormGroup, ControlLabel, Uploader, Button, FormControl, Progress } from 'rsuite';
 import { FileType } from "rsuite/lib/Uploader";
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
+import { useAPI } from 'hooks/useAPI';
 
-import { API_BASE_URL, dndPlaceholderStyle } from './ClassifyRoute';
+import { dndPlaceholderStyle } from './ClassifyRoute';
 
 import styles from './SearchVideoRoute.module.css';
 
@@ -28,10 +28,8 @@ function ImagePanel({ imageMap }: { imageMap: { [key: string]: string[]  } }) {
 
 export default function SearchVideoRoute() {
     const [videoList, setVideoList] = useState<FileType[]>([]);
-    const [uploadProgress, setUploadProgress] = useState<number>();
     const [category, setCategory] = useState<string>();
-
-    const [result, setResult] = useState<AxiosResponse>();
+    const { loading, progress, data, executePost } = useAPI({ path: 'video' });
 
     const isInputInvalid = videoList.length === 0 || category === undefined;
 
@@ -42,9 +40,6 @@ export default function SearchVideoRoute() {
         if (videoList[0]) {
             const video = videoList[0].blobFile;
             if (video) formData.append('video', video);
-            const config: AxiosRequestConfig = {
-                onUploadProgress: progress => setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
-            }
 
             //only appends json categories file if at least one category is defined
             const json = categoriesToJson(category)
@@ -56,9 +51,7 @@ export default function SearchVideoRoute() {
                 formData.append('categories', file, 'categories.json');
             }
 
-            const response = await axios.post(`${API_BASE_URL}/video`, formData, config);
-            setResult(response)
-            setUploadProgress(undefined);
+            await executePost(formData);
         }
     };
 
@@ -90,14 +83,14 @@ export default function SearchVideoRoute() {
                     />
                 </FormGroup>
                 <div className={styles.uploadControls}>
-                    <Button onClick={upload} disabled={isInputInvalid} loading={(uploadProgress ?? 100) < 100}>Upload</Button>
-                    {typeof uploadProgress !== 'undefined' &&
-                        <Progress.Line className={styles.progressBar} percent={uploadProgress} status={uploadProgress === 100 ? 'success' : undefined} />
+                    <Button onClick={upload} disabled={isInputInvalid} loading={loading}>Upload</Button>
+                    {typeof progress !== 'undefined' &&
+                        <Progress.Line className={styles.progressBar} percent={progress} status={progress === 100 ? 'success' : undefined} />
                     }
                 </div>
 
             </Form>
-            <ImagePanel imageMap={result?.data} />
+            <ImagePanel imageMap={data} />
         </div>
     );
 }
