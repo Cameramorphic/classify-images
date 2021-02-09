@@ -28,13 +28,9 @@ ADD .cache /root/.cache
 WORKDIR /app
 ADD . /app
 
-# Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
-# RUN useradd appuser && chown -R appuser /app
-# USER appuser
-
+# Timeout = 1h
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--timeout", "14400", "--workers", "1", "app:app"]
-# 4 hours timeout
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--timeout", "3600", "--workers", "1", "app:app"]
 
 
 

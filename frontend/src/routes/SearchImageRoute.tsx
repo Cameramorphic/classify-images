@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-import { Form, FormGroup, ControlLabel, Uploader, Button, Progress } from 'rsuite';
+import { Form } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
+import GenericUploader from 'components/forms/GenericUploader';
+import ImageUploader from 'components/forms/ImageUploader';
+import { UploadControls } from 'components/forms/UploadControls';
 import { useAPI } from 'hooks/useAPI';
-
-import { dndPlaceholderStyle } from './ClassifyRoute';
 
 import styles from './SearchImageRoute.module.css';
 
@@ -53,39 +54,23 @@ export default function SearchImageRoute() {
     return (
         <div>
             <Form className={styles.form}>
-                <FormGroup>
-                    <ControlLabel>Image Files</ControlLabel>
-                    <Uploader
-                        name='files'
-                        fileList={imageList}
-                        onChange={setImageList}
-                        accept='.png,.jpg'
-                        multiple
-                        draggable
-                        autoUpload={false}
-                        listType='picture'
-                    >
-                        <div style={{ ...dndPlaceholderStyle, fontSize: '25px' }}>+</div>
-                    </Uploader>
-                </FormGroup>
-                <FormGroup>
-                    <ControlLabel>Categories</ControlLabel>
-                    <Uploader
-                        name='categories'
-                        fileList={categoryList}
-                        onChange={list => setCategoryList(list.length > 0 ? [list[list.length - 1]] : [])}
-                        accept='.csv,.json'
-                        draggable
-                        autoUpload={false}>
-                        <div style={dndPlaceholderStyle}>Click here, or drag a csv or json file into this area.</div>
-                    </Uploader>
-                </FormGroup>
-                <div className={styles.uploadControls}>
-                    <Button onClick={upload} disabled={isInputInvalid} loading={loading}>Upload</Button>
-                    {typeof progress !== 'undefined' &&
-                        <Progress.Line className={styles.progressBar} percent={progress} status={progress === 100 ? 'success' : undefined} />
-                    }
-                </div>
+                <ImageUploader
+                    label='Image Files'
+                    fileList={imageList}
+                    onChange={setImageList}
+                />
+                <GenericUploader
+                    label='Categories'
+                    fileList={categoryList}
+                    onChange={setCategoryList}
+                    accept={['.csv', '.json']}
+                />
+                <UploadControls
+                    onUpload={upload}
+                    disabled={isInputInvalid}
+                    loading={loading}
+                    progress={progress}
+                />
             </Form>
             <ImagePanel imageMap={data} imageList={imageList} />
         </div>
