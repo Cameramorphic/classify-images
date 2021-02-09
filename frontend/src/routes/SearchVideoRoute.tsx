@@ -89,24 +89,14 @@ export default function SearchVideoRoute() {
 }
 
 
-function categoriesToJson(s: string | undefined) {
-
+function categoriesToJson(s?: string) {
     if (s) {
         //replaces multiple whitespaces with only one and replaces semicolons with ','
-        const categoriesWithoutMultipleWhitespaces = s?.replace(/\s\s+/g, ' ')
+        const categoriesWithoutMultipleWhitespaces = s.replace(/\s\s+/g, ' ')
             .replaceAll(';', ',');
         //trims leading and ending whitespaces
-        var categories = categoriesWithoutMultipleWhitespaces.split(',')
-        for (let i = 0; i < categories.length; i++) {
-            categories[i] = categories[i].trim()
-        }
-        var data = { "categories": categories }
-        return JSON.stringify(data);
+        const categories = categoriesWithoutMultipleWhitespaces.split(',').map(c => c.trim());
+        return JSON.stringify({ categories });
     }
     return undefined;
-
 }
-
-
-
-
