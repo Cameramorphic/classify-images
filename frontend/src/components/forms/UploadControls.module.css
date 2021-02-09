@@ -1,0 +1,8 @@
+.uploadControls {
+    display: flex;
+    gap: 10px;
+}
+
+.progressBar {
+    flex: 1;
+}

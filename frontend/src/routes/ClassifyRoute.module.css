@@ -3,12 +3,3 @@
     margin: 50px auto;
     padding: 20px;
 }
-
-.uploadControls {
-    display: flex;
-    gap: 10px;
-}
-
-.uploadControls .progressBar {
-    flex: 1;
-}
