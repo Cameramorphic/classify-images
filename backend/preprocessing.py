@@ -6,10 +6,11 @@ import json
 import numpy as np
 import os
 import torch
-from flask import Response
 from PIL import Image
-from requests_toolbelt import MultipartEncoder
 import base64
+from flask import Response
+from MessageException import MessageException
+
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
@@ -17,8 +18,7 @@ model, preprocess = clip.load("ViT-B/32", device=device)
 image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).to(device)
 image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).to(device)
 
-
-def predict_multiple(by_image):
+def get_texts_images_imagenames():
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
@@ -30,37 +30,38 @@ def predict_multiple(by_image):
                    images.append(preprocess(image.convert("RGB")))
                 imagenames.append(filename)
             except:
-                return app.error_response("Invalid image, the file " + filename + " seems to be broken")
+                raise MessageException("Invalid image, the file " + filename + " seems to be broken")
         elif filename.endswith(".csv"):
             try:
                 texts = open(os.path.join(dir, filename)).read().split(',')
             except UnicodeDecodeError:
-                return app.error_response(
-                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+                raise MessageException("Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
         elif filename.endswith(".json"):
             try:
                 file = open(os.path.join(dir, filename))
                 texts = json.loads(file.read())["categories"]
                 file.close()
             except UnicodeDecodeError:
-                return app.error_response(
-                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+                raise MessageException("Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
             except:
-                return app.error_response(
-                    "Invalid json file, please check the syntax of " + filename)
-    print('categories set to: ' + ' - '.join(texts))
-
+                raise MessageException("Invalid json file, please check the syntax of " + filename)
+        
     if not texts:
         texts = open("/app/default-list.csv").read().split(',')
+    print('categories set to: ' + ' - '.join(texts))
+    return texts,images,imagenames
+
+def predict_multiple(by_image):
+    texts,images,imagenames = get_texts_images_imagenames()
 
     image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]
     image_input /= image_std[:, None, None]
+
     try:
         text_input = clip.tokenize(texts).to(device)
     except RuntimeError:
-        return app.error_response(
-            "One of your categories is too long, maximum number of characters per category is 77")
+        raise MessageException("One of your categories is too long, maximum number of characters per category is 77")
 
     with torch.no_grad():
         logits_per_image, logits_per_text = model(image_input, text_input)
@@ -70,15 +71,10 @@ def predict_multiple(by_image):
         else:
             probs = logits_per_text.softmax(dim=-1).cpu().numpy()
             dic = {texts[i]: imagenames[np.argmax(probs[i])] for i in range(len(probs))}
-
-    # results = ['<tr><td>' + key + ': </td><td>' + dic[key] + '</td></tr>' for key in dic]
-    # m = np.argmax(probs, axis=-1)
-    # res = [imagenames[i] + " :  " + texts[i] for i in m]
-    # return '<table>' + ' '.join(results) + '</table>'
     return Response(json.dumps(dic), status=201, mimetype='application/json')
 
-# currently only one video at a time (but with multiple textual descriptions)
-def video_retrieval():
+
+def get_texts_images_imagenames_videopath():
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
@@ -94,8 +90,7 @@ def video_retrieval():
                 texts = open(os.path.join(dir, filename)).read().split(',')
                 print('categories set to: ' + ' - '.join(texts))
             except UnicodeDecodeError:
-                return app.error_response(
-                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+                raise MessageException("Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
         elif filename.endswith(".json"):
             try:
                 file = open(os.path.join(dir, filename))
@@ -103,25 +98,25 @@ def video_retrieval():
                 print('categories set to: ' + ' - '.join(texts))
                 file.close()
             except UnicodeDecodeError:
-                return app.error_response(
-                    "Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
+                raise MessageException("Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
             except json.JSONDecodeError:
-                return app.error_response(
-                    "Invalid json file, please check the syntax of " + filename)
-    if not texts:
-        texts = open(os.path.join(dir, filename)).read().split(',')
+                raise MessageException("Invalid json file, please check the syntax of " + filename)
+    return texts,images,imagenames,videopath
+
+def video_retrieval():
+    texts,images,imagenames,videopath = get_texts_images_imagenames_videopath()
 
     try:
         image_input = torch.tensor(np.stack(images)).to(device)
     except ValueError:
-        return app.error_response("Invalid video, the file " + videopath[videopath.rfind("/")+1:] + " seems to be broken")
+        raise MessageException("Invalid video, the file " + videopath[videopath.rfind("/")+1:] + " seems to be broken")
+
     image_input -= image_mean[:, None, None]
     image_input /= image_std[:, None, None]
     try:
         text_input = clip.tokenize(texts).to(device)
     except RuntimeError:
-        return app.error_response(
-            "One of your categories is too long, maximum number of characters per category is 77")
+        raise MessageException("One of your categories is too long, maximum number of characters per category is 77")
 
     with torch.no_grad():
         logits_per_image, logits_per_text = model(image_input, text_input)
@@ -130,7 +125,6 @@ def video_retrieval():
     print(imagenames)
 
     result = {}
-
     for i in range(len(texts)):
         filepath = saveImageFromVideo(videopath, np.argmax(probs[i]))
         with open(filepath, "rb") as image_file:
@@ -150,7 +144,6 @@ def extractImages(pathIn):
             images.append(Image.fromarray(image))
             count = count + 1
     return images, count
-
 
 # index in seconds
 def saveImageFromVideo(pathIn, index):
