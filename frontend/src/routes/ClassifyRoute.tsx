@@ -13,6 +13,10 @@ export const dndPlaceholderStyle = {
     lineHeight: '62px',
 };
 
+/**
+ * Creates all the image panels to show the results.
+ * @param param0 
+ */
 function ImagePanel({ categoryMap, imageList }: { categoryMap: { [key: string]: string }, imageList: FileType[] }) {
     return <ImageGrid>
         {categoryMap &&

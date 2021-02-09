@@ -10,6 +10,10 @@ import { dndPlaceholderStyle } from './ClassifyRoute';
 
 import styles from './SearchVideoRoute.module.css';
 
+/**
+ * Creates all the image panels to show the results.
+ * @param param0 
+ */
 function ImagePanel({ imageMap }: { imageMap: { [key: string]: string[]  } }) {
     var panels = [];
     for (const key in imageMap) {

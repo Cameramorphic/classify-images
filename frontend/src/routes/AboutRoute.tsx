@@ -6,6 +6,9 @@ import readme from './README.md';
 
 import styles from './AboutRoute.module.css';
 
+/** 
+ * Displays the readme.md
+*/
 export default function AboutRoute() {
   const [mdText, setMdText] = useState('');
 
