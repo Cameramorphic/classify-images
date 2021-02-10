@@ -25,6 +25,7 @@ def hello():
     ''' Returns a flask response with a plain welcome text message.'''
     return Response("Welcome to classify-images. categorize files at /categorize ", status=200, mimetype='text/plain')
 
+
 SELECT_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">
         <input type="file" name="files" multiple="">
@@ -80,7 +81,7 @@ def save_special_file(name, exts, allow_no_file=False):
     if file is None or file.filename == "":
         if not allow_no_file:
             raise MessageException("No file selected, please select a " + name + " file")
-    else:      
+    else:
         save_if_allowed(file, exts)
 
 
