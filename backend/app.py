@@ -26,7 +26,7 @@ def hello():
     return Response("Welcome to classify-images. categorize files at /categorize ", status=200, mimetype='text/plain')
 
 SELECT_FILES_HTML = '''
-        <form method="POST" enctype="multipart/form-data">   
+        <form method="POST" enctype="multipart/form-data">
         <input type="file" name="files" multiple="">
         <input type="file" name="categories">
         <input type="submit" value="add">
@@ -34,7 +34,7 @@ SELECT_FILES_HTML = '''
          '''
 
 SELECT_VID_FILES_HTML = '''
-        <form method="POST" enctype="multipart/form-data">   
+        <form method="POST" enctype="multipart/form-data">
         <input type="file" name="video">
         <input type="file" name="categories">
         <input type="submit" value="add">
@@ -77,7 +77,7 @@ def save_special_file(name, exts, allow_no_file=False):
         If no input file can be read from flask request and allow_no_file is `False`.
     '''
     file = request.files.get(name)
-    if file == None or file.filename == "":
+    if file is None or file.filename == "":
         if not allow_no_file:
             raise MessageException("No file selected, please select a " + name + " file")
     else:      
@@ -114,7 +114,7 @@ def save_images_and_categories_file(allow_no_categories_file):
 def categorize():
     if request.method != 'POST':
         return Response(SELECT_FILES_HTML, status=200, mimetype='text/html')
-    
+
     save_images_and_categories_file(True)
     return preprocessing.predict_multiple(True)
 
@@ -123,7 +123,7 @@ def categorize():
 def image():
     if request.method != 'POST':
         return Response(SELECT_FILES_HTML, status=200, mimetype='text/html')
-    
+
     save_images_and_categories_file(False)
     return preprocessing.predict_multiple(False)
 
@@ -170,9 +170,9 @@ def delete_file(filepath):
     '''
     if os.path.exists(filepath):
         os.remove(filepath)
-        print( filepath + " removed", sep=' ')
+        print(filepath + " removed", sep=' ')
     else:
-        print( filepath + " does not exist", sep=' ')
+        print(filepath + " does not exist", sep=' ')
 
 
 @app.after_request
