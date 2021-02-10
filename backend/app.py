@@ -11,11 +11,13 @@ from os.path import isfile, join
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/app/uploads/'
 
+
 @app.errorhandler(MessageException)
 def handle_MessageException(e):
     ''' Returns a flask response with an error message as json. '''
-    dict = {'error' : str(e)}
+    dict = {'error': str(e)}
     return Response(json.dumps(dict), status=400, mimetype='application/json')
+
 
 # required for kubernetes health checks
 @app.route("/", methods=['GET'])
@@ -42,15 +44,20 @@ SELECT_VID_FILES_HTML = '''
 ALLOWED_IMAGE_EXTS = {'png', 'jpg', 'jpeg'}
 ALLOWED_CATEGORIES_EXTS = {'csv', 'json'}
 ALLOWED_VIDEO_EXTS = {'mp4'}
+
+
 def is_allowed(filename, exts):
     ''' Checks the filenames extension. '''
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in exts
+
+
 def save_if_allowed(file, exts):
     ''' Saves the file to the upload folder if its extension is valid. '''
     if is_allowed(file.filename, exts):
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         return True
     raise MessageException("Invalid extension, allowed extensions are: " + str(exts))
+
 
 def save_special_file(name, exts, allow_no_file=False):
     '''
@@ -75,6 +82,7 @@ def save_special_file(name, exts, allow_no_file=False):
             raise MessageException("No file selected, please select a " + name + " file")
     else:      
         save_if_allowed(file, exts)
+
 
 def save_images_and_categories_file(allow_no_categories_file):
     '''
@@ -101,6 +109,7 @@ def save_images_and_categories_file(allow_no_categories_file):
         raise MessageException("No image file with allowed extension selected (" + str(ALLOWED_IMAGE_EXTS) + " are allowed)")
     print(filenames)
 
+
 @app.route("/categorize", methods=['GET', 'POST'])
 def categorize():
     if request.method != 'POST':
@@ -109,6 +118,7 @@ def categorize():
     save_images_and_categories_file(True)
     return preprocessing.predict_multiple(True)
 
+
 @app.route("/image", methods=['GET', 'POST'])
 def image():
     if request.method != 'POST':
@@ -116,6 +126,7 @@ def image():
     
     save_images_and_categories_file(False)
     return preprocessing.predict_multiple(False)
+
 
 @app.route("/video", methods=['GET', 'POST'])
 def video():
@@ -126,15 +137,18 @@ def video():
     save_special_file("categories", ALLOWED_CATEGORIES_EXTS, False)
     return preprocessing.video_retrieval()
 
+
 @app.route("/doc/preprocessing", methods=['GET'])
 def preproccessing_doc():
     ''' Generates HTML documentation for preprocessing.py. '''
     return pdoc.html('preprocessing')
 
+
 @app.route("/doc/app", methods=['GET'])
 def app_doc():
     ''' Generates HTML documentation for app.py. '''
     return pdoc.html('app')
+
 
 def delete_files():
     ''' Deletes all files in the upload folder. '''
@@ -143,6 +157,7 @@ def delete_files():
     for filename in onlyfiles:
         filepath = os.path.join(mypath, filename)
         delete_file(filepath)
+
 
 def delete_file(filepath):
     '''
@@ -159,6 +174,7 @@ def delete_file(filepath):
     else:
         print( filepath + " does not exist", sep=' ')
 
+
 @app.after_request
 def after_request(response):
     '''
@@ -171,6 +187,7 @@ def after_request(response):
     header['Access-Control-Allow-Origin'] = '*'
     header['Access-Control-Expose-Headers'] = 'Content-Disposition'
     return response
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

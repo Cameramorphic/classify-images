@@ -70,6 +70,7 @@ def get_texts_images_imagenames():
     print('categories set to: ' + ' - '.join(texts))
     return texts, images, imagenames
 
+
 def predict_multiple(by_image):
     '''
     Uses the images and a categories file in the upload folder as input. Maps one image to each category or one category
@@ -92,7 +93,7 @@ def predict_multiple(by_image):
         If the categories file has an invalid encoding or syntax, an image has invalid content or a category has invalid
         length (>77 characters).
     '''
-    texts,images,imagenames = get_texts_images_imagenames()
+    texts, images, imagenames = get_texts_images_imagenames()
 
     image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]
@@ -180,7 +181,7 @@ def video_retrieval():
             categories has an invalid length (>77 characters).
 
     '''
-    texts,images,imagenames,videopath = get_texts_images_imagenames_videopath()
+    texts, images, imagenames, videopath = get_texts_images_imagenames_videopath()
 
     try:
         image_input = torch.tensor(np.stack(images)).to(device)
@@ -208,6 +209,7 @@ def video_retrieval():
             trimmed_base64 = trimmed_base64[2:(len(trimmed_base64) - 1)]
             result[texts[i]] = [trimmed_base64, str(probs[i][np.argmax(probs[i])] * 100), str(np.argmax(probs[i]))]
     return Response(json.dumps(result), status=201, mimetype='application/json')
+
 
 def extractImages(pathIn):
     '''
@@ -237,6 +239,7 @@ def extractImages(pathIn):
             images.append(Image.fromarray(image))
             count = count + 1
     return images, count
+
 
 def saveImageFromVideo(pathIn, index):
     '''
