@@ -10,26 +10,6 @@ import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchVideoRoute.module.css';
 
-/**
- * Creates all the image panels to show the results.
- * @param param0 
- */
-function ImagePanel({ imageMap }: { imageMap: { [key: string]: string[] } }) {
-    var panels = [];
-    for (const key in imageMap) {
-        var image_content = imageMap[key][0].substring(2, imageMap[key][0].length - 1);
-        var image_url = 'data:image/jpeg;base64,' + image_content;
-        panels.push(
-            <ImageGridItem key={key}
-                imageUrl={image_url}
-                title={key}
-            />
-        );
-    }
-
-    return <ImageGrid>{panels}</ImageGrid>;
-}
-
 export default function SearchVideoRoute() {
     const [videoList, setVideoList] = useState<FileType[]>([]);
     const [category, setCategory] = useState<string>();
@@ -83,7 +63,13 @@ export default function SearchVideoRoute() {
                     progress={progress}
                 />
             </Form>
-            <ImagePanel imageMap={data} />
+            <ImageGrid>
+                {data && Object.keys(data).map(key => {
+                    const image_content = data[key][0].substring(2, data[key][0].length - 1);
+                    const image_url = 'data:image/jpeg;base64,' + image_content;
+                    return <ImageGridItem key={key} imageUrl={image_url} title={key} />;
+                })}
+            </ImageGrid>
         </div>
     );
 }

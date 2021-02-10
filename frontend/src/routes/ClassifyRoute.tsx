@@ -11,28 +11,6 @@ import { useAPI } from 'hooks/useAPI';
 
 import styles from './ClassifyRoute.module.css';
 
-/**
- * Creates all the image panels to show the results.
- * @param param0 
- */
-function ImagePanel({ categoryMap, imageList }: { categoryMap: { [key: string]: string }, imageList: FileType[] }) {
-    return <ImageGrid>
-        {categoryMap &&
-            imageList.map(img => {
-                const category = img.name ? categoryMap[img.name] : undefined;
-                const image_url = URL.createObjectURL(img.blobFile);
-                return (
-                    <ImageGridItem key={image_url}
-                        imageUrl={image_url}
-                        title={category}
-                        subtitle={img.name}
-                    />
-                );
-            })
-        }
-    </ImageGrid>
-}
-
 export default function ClassifyRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
@@ -73,7 +51,13 @@ export default function ClassifyRoute() {
                     progress={progress}
                 />
             </Form>
-            <ImagePanel categoryMap={data} imageList={imageList} />
+            <ImageGrid>
+                {data && imageList.map(img => {
+                    const category = img.name ? data[img.name] : undefined;
+                    const image_url = URL.createObjectURL(img.blobFile);
+                    return <ImageGridItem key={image_url} imageUrl={image_url} title={category} subtitle={img.name} />;
+                })}
+            </ImageGrid>
         </div>
     );
 }

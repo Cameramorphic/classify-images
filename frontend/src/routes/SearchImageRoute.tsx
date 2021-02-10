@@ -11,29 +11,6 @@ import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchImageRoute.module.css';
 
-/**
- * Creates all the image panels to show the results.
- * @param param0 
- */
-function ImagePanel({ imageMap, imageList }: { imageMap: { [key: string]: string }, imageList: FileType[] }) {
-    var panels = [];
-
-    for (const key in imageMap) {
-        var image = imageList.find(x => x.name === imageMap[key]);
-        if (!image) continue;
-        var image_url = URL.createObjectURL(image.blobFile);
-        panels.push(
-            <ImageGridItem key={key}
-                imageUrl={image_url}
-                title={key}
-                subtitle={image?.name}
-            />
-        );
-    }
-
-    return <ImageGrid>{panels}</ImageGrid>;
-}
-
 export default function SearchImageRoute() {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
@@ -72,7 +49,16 @@ export default function SearchImageRoute() {
                     progress={progress}
                 />
             </Form>
-            <ImagePanel imageMap={data} imageList={imageList} />
+            <ImageGrid>
+                {data && Object.keys(data).map(key => {
+                    const image = imageList.find(x => x.name === data[key]);
+                    if (!image) return null;
+                    const image_url = URL.createObjectURL(image.blobFile);
+                    return (
+                        <ImageGridItem key={key} imageUrl={image_url} title={key} subtitle={image.name} />
+                    );
+                })}
+            </ImageGrid>
         </div>
     );
 }
