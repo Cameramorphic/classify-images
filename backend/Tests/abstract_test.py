@@ -43,8 +43,15 @@ def build_base_multipart_images(endpoint, files):
     wait_for_server(endpoint)
     multipart_form_data = []
     for f in files:
-        multipart_form_data.append(('files', (str(f), open('Pictures/' + f, 'rb'), 'image/jpg')))
+        if f != "sources.txt":
+            multipart_form_data.append(('files', (str(f), open('Pictures/' + f, 'rb'), 'image/jpg')))
     return multipart_form_data
+
+def build_base_video(endpoint, file):
+    wait_for_server(endpoint)
+    multipart_form_data = [('video', (str(file), open('Videos/' + file, 'rb'), 'video/mp4'))]
+    return multipart_form_data
+
 
 def post_multipart(endpoint, multipart_form_data):
     wait_for_server(categorize)
