@@ -9,7 +9,6 @@ from PIL import Image
 import abstract_test
 import base64
 
-pytest_plugins = ["docker_compose"]
 
 video_endpoint = abstract_test.ADDRESS + abstract_test.video
 

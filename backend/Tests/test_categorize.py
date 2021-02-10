@@ -4,7 +4,6 @@ import os
 import abstract_test
 import json
 
-pytest_plugins = ["docker_compose"]
 
 files = os.listdir("Pictures")
 
