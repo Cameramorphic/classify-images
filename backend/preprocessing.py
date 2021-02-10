@@ -18,6 +18,7 @@ model, preprocess = clip.load("ViT-B/32", device=device)
 image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).to(device)
 image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).to(device)
 
+
 def get_texts_images_imagenames():
     '''
         Uses the images and categories file in the upload folder as input. Retrieves the texts from the categories file,
@@ -45,9 +46,9 @@ def get_texts_images_imagenames():
         if app.is_allowed(filename, app.ALLOWED_IMAGE_EXTS):
             try:
                 with Image.open(os.path.join(dir, filename)) as image:
-                   images.append(preprocess(image.convert("RGB")))
+                    images.append(preprocess(image.convert("RGB")))
                 imagenames.append(filename)
-            except:
+            except Exception:
                 raise MessageException("Invalid image, the file " + filename + " seems to be broken")
         elif filename.endswith(".csv"):
             try:
@@ -61,13 +62,13 @@ def get_texts_images_imagenames():
                 file.close()
             except UnicodeDecodeError:
                 raise MessageException("Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
-            except:
+            except Exception:
                 raise MessageException("Invalid json file, please check the syntax of " + filename)
-        
+
     if not texts:
         texts = open("/app/default-list.csv").read().split(',')
     print('categories set to: ' + ' - '.join(texts))
-    return texts,images,imagenames
+    return texts, images, imagenames
 
 def predict_multiple(by_image):
     '''
@@ -141,9 +142,9 @@ def get_texts_images_imagenames_videopath():
     videopath = ''
     for filename in os.listdir(dir):
         if filename.endswith(".mp4"):
-                videopath = os.path.join(dir, filename)
-                images, secs = extractImages(videopath)
-                images = [preprocess(image.convert("RGB")) for image in images]
+            videopath = os.path.join(dir, filename)
+            images, secs = extractImages(videopath)
+            images = [preprocess(image.convert("RGB")) for image in images]
         elif filename.endswith(".csv"):
             try:
                 texts = open(os.path.join(dir, filename)).read().split(',')
@@ -160,7 +161,7 @@ def get_texts_images_imagenames_videopath():
                 raise MessageException("Invalid encoding in file " + filename + ", valid encodings are UTF-8 and US-ASCII")
             except json.JSONDecodeError:
                 raise MessageException("Invalid json file, please check the syntax of " + filename)
-    return texts,images,imagenames,videopath
+    return texts, images, imagenames, videopath
 
 def video_retrieval():
     '''
