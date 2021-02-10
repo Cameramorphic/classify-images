@@ -1,10 +1,8 @@
 import csv
 import json
 
-import pytest
 import requests
 import os
-import time
 
 from PIL import Image
 
