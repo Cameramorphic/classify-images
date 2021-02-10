@@ -65,7 +65,7 @@ export default function SearchVideoRoute() {
             </Form>
             <ImageGrid>
                 {data && Object.keys(data).map(key => {
-                    const image_content = data[key][0].substring(2, data[key][0].length - 1);
+                    const image_content = data[key][0];
                     const image_url = 'data:image/jpeg;base64,' + image_content;
                     return <ImageGridItem key={key} imageUrl={image_url} title={key} />;
                 })}
