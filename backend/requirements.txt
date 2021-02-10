@@ -6,4 +6,3 @@ opencv-python-headless==4.5.1.48 #this version of opencv is for servers/dockers 
 pdoc3==0.9.2
 requests==2.25.1
 pytest-docker-compose==3.2.1
-docker-compose==1.28.2
