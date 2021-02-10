@@ -1,6 +1,4 @@
 import csv
-
-import pytest
 import requests
 import os
 import abstract_test

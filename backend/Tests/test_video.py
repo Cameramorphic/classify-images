@@ -77,6 +77,7 @@ def is_image(path):
         os.remove(path)
         return False
 
+
 def is_valid_response(categories, json_response):
     for category in categories:
         probability = json_response[category][1]
@@ -89,4 +90,3 @@ def is_valid_response(categories, json_response):
         f.write(file_bytes)
         f.close()
         assert is_image(file_path)
-
