@@ -1,15 +1,14 @@
 .content {
-    min-height: calc(100vh - 72px - 70px); /* calc('viewport height' - 'header' - 'footer')*/
+  min-height: calc(100vh - 72px - 70px); /* calc('viewport height' - 'header' - 'footer') */
 }
 
 .widthContainer {
-    width: 100%;
-    margin: 0 auto;
-  }
-  
-@media (min-width: 1440px) {
-    .widthContainer {
-        width: 1440px;
-    }
+  width: 100%;
+  margin: 0 auto;
 }
-  
+
+@media (min-width: 1440px) {
+  .widthContainer {
+    width: 1440px;
+  }
+}

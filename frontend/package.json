@@ -30,7 +30,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx src"
+    "tsc": "./node_modules/typescript/bin/tsc",
+    "lint": "./node_modules/.bin/eslint --ext .js,.ts,.tsx src",
+    "stylelint": "./node_modules/stylelint/bin/stylelint.js \"src/**/*.css\""
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +55,9 @@
   "devDependencies": {
     "@types/classnames": "^2.2.11",
     "@types/react-helmet": "^6.1.0",
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "stylelint": "^13.9.0",
+    "stylelint-config-css-modules": "^2.2.0",
+    "stylelint-config-standard": "^20.0.0"
   }
 }
