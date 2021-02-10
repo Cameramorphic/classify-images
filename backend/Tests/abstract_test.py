@@ -61,3 +61,5 @@ def post_multipart(endpoint, multipart_form_data, status_code):
     assert response.status_code == status_code
     json_response = json.loads(response.text)
     return json_response
+
+

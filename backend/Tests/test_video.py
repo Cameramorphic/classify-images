@@ -9,7 +9,6 @@ from PIL import Image
 import abstract_test
 import base64
 
-
 video_endpoint = abstract_test.ADDRESS + abstract_test.video
 
 VIDEOS_DIRECTORY = "Videos"
