@@ -164,6 +164,7 @@ def get_texts_images_imagenames_videopath():
                 raise MessageException("Invalid json file, please check the syntax of " + filename)
     return texts, images, imagenames, videopath
 
+
 def video_retrieval():
     '''
         Uses the video and categories file in the upload folder as input. Searches the video for the best matching image
