@@ -55,7 +55,7 @@ def test_post_categorize_invalid_image_files(module_scoped_container_getter):
 def test_post_categorize_invalid_categories_file(module_scoped_container_getter):
     multipart_form_data = abstract_test.build_base_multipart_images(abstract_test.categorize, files, "Pictures/")
     multipart_form_data.append(('categories', (str("invalid2.pdf")
-                                               , open('Invalidfiles/' + "invalid2.pdf", 'rb')
+                                               , open('InvalidFiles/' + "invalid2.pdf", 'rb')
                                                , 'text/plain')))
     json_response = abstract_test.post_multipart(abstract_test.categorize, multipart_form_data, 400)
     assert json_response["error"] == "Invalid extension, allowed extensions are: ['csv', 'json']"
