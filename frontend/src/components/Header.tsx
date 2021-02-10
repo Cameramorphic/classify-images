@@ -10,7 +10,7 @@ import { containerClass } from 'App';
 
 import styles from './Header.module.css';
 
-export default function Header() {
+export default function Header(): JSX.Element {
     return (
         <div className={styles.header}>
             <div className={clx(styles.headerContent, containerClass)}>

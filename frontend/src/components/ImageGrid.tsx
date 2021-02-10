@@ -10,7 +10,7 @@ interface IProps extends StandardProps {
     children?: React.ReactNode;
 }
 
-export const ImageGrid = ({ children, ...props }: IProps) => (
+export const ImageGrid = ({ children, ...props }: IProps): JSX.Element => (
     <div className={clx(styles.imgGrid, props.className)} style={props.style}>
         {children}
     </div>
@@ -23,7 +23,7 @@ interface IItemProps extends StandardProps {
     children?: React.ReactNode;
 }
 
-export const ImageGridItem = ({ imageUrl, title, subtitle, children, ...props }: IItemProps) => (
+export const ImageGridItem = ({ imageUrl, title, subtitle, children, ...props }: IItemProps): JSX.Element => (
     <div className={clx(styles.imgGridItem, props.className)} style={props.style}>
         <img src={imageUrl} alt={title} />
         <div className={styles.content}>

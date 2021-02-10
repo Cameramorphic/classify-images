@@ -10,7 +10,7 @@ interface IProps {
     small?: boolean;
 }
 
-export default function Slogan({ text, small }: IProps) {
+export default function Slogan({ text, small }: IProps): JSX.Element {
     return (
         <div className={clx(styles.sloganArea, small && styles.small)}>
             <div className={styles.slogan}>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Alert, ControlLabel, FormGroup, Uploader, UploaderProps } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
-export const validateOnChange = (list: FileType[], accept?: string[], onChange?: (list: FileType[]) => void) => {
+export const validateOnChange = (list: FileType[], accept?: string[], onChange?: (list: FileType[]) => void): void => {
     if (accept && accept.length > 0) {
         const regex = new RegExp(`(${accept.join('|')})$`);
         if (list.some(file => !regex.test(file.name ?? ''))) {
@@ -22,7 +22,7 @@ export type GenericUploaderProps = {
 
 type IProps = GenericUploaderProps
 
-export default function GenericUploader({ label, accept, multiple, fileList, onChange }: IProps) {
+export default function GenericUploader({ label, accept, multiple, fileList, onChange }: IProps): JSX.Element {
     const uploader =
         <Uploader
             fileList={fileList}

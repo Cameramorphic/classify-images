@@ -19,7 +19,7 @@ const GridItem = ({ link, title, children }: IProps) => (
     </Link>
 );
 
-export default function RootRoute() {
+export default function RootRoute(): JSX.Element {
     return (
         <div className={styles.gridContainer}>
             <GridItem link={PATHS.CATEGORISE} title='Categorise Images'>

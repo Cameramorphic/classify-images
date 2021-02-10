@@ -11,7 +11,7 @@ import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchImageRoute.module.css';
 
-export default function SearchImageRoute() {
+export default function SearchImageRoute(): JSX.Element {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
     const { loading, progress, data, executePost } = useAPI({ path: 'image' });

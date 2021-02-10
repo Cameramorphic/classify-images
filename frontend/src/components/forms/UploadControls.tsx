@@ -11,7 +11,7 @@ interface IProps {
     onUpload?(): void;
 }
 
-export const UploadControls = ({ disabled, loading, progress, onUpload }: IProps) => (
+export const UploadControls = ({ disabled, loading, progress, onUpload }: IProps): JSX.Element => (
     <div className={styles.uploadControls}>
         <Button onClick={onUpload} disabled={disabled} loading={loading}>Upload</Button>
         {typeof progress !== 'undefined' &&

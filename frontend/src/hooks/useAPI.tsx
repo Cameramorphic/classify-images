@@ -9,7 +9,8 @@ const ALERT_DURATION = 8000;
 
 interface IAction {
     type: 'loading' | 'success' | 'error';
-    value?: AxiosResponse | AxiosError;
+    successValue?: AxiosResponse;
+    errorValue?: AxiosError;
 }
 
 interface IState {
@@ -24,16 +25,21 @@ const defaultState: IState = {
     error: undefined
 };
 
-export function useAPI({ path }: { path: string }) {
+type APIProperties = {
+    progress?: number;
+    executePost(data: any): void;
+} & IState;
+
+export function useAPI({ path }: { path: string }): APIProperties {
     const [progress, setProgress] = useState<number>();
-    const [state, dispatch] = useReducer((_state: any, action: IAction) => {
+    const [state, dispatch] = useReducer((_state: IState, action: IAction) => {
         switch (action.type) {
             case 'loading':
                 return { ...defaultState, loading: true };
             case 'success':
-                return { ...defaultState, data: action.value };
+                return { ...defaultState, data: action.successValue };
             case 'error':
-                return { ...defaultState, error: action.value };
+                return { ...defaultState, error: action.errorValue };
         }
     }, defaultState);
 
@@ -45,10 +51,10 @@ export function useAPI({ path }: { path: string }) {
         dispatch({ type: 'loading' });
         try {
             const response = await axios.post(`${API_BASE_URL}/${path}`, data, config);
-            dispatch({ type: 'success', value: response.data });
+            dispatch({ type: 'success', successValue: response.data });
         } catch (err) {
             const error = err as AxiosError;
-            dispatch({ type: 'error', value: error });
+            dispatch({ type: 'error', errorValue: error });
             if (error.response) { // api responded with error code outside of range 2xx
                 const message = error.response.data.error;
                 if (message) Alert.error(message, ALERT_DURATION);

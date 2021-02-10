@@ -4,7 +4,7 @@ import { containerClass } from 'App';
 
 import styles from './Footer.module.css';
 
-export default function Footer() {
+export default function Footer(): JSX.Element {
     return (
         <div className={containerClass}>
             <div className={styles.footer}>

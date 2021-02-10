@@ -8,7 +8,7 @@ const acceptDefault = ['.png', '.jpg', '.jpeg'];
 
 type IProps = GenericUploaderProps;
 
-export default function ImageUploader({ label, accept = acceptDefault, fileList, onChange }: IProps) {
+export default function ImageUploader({ label, accept = acceptDefault, fileList, onChange }: IProps): JSX.Element {
     const uploader =
         <Uploader
             fileList={fileList}

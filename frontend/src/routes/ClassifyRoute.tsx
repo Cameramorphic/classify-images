@@ -11,7 +11,7 @@ import { useAPI } from 'hooks/useAPI';
 
 import styles from './ClassifyRoute.module.css';
 
-export default function ClassifyRoute() {
+export default function ClassifyRoute(): JSX.Element {
     const [imageList, setImageList] = useState<FileType[]>([]);
     const [categoryList, setCategoryList] = useState<FileType[]>([]);
 

@@ -9,7 +9,7 @@ import styles from './AboutRoute.module.css';
 /**
  * Displays the readme.md
 */
-export default function AboutRoute() {
+export default function AboutRoute(): JSX.Element {
   const [mdText, setMdText] = useState('');
 
   useEffect(() => {

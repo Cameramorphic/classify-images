@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import { Form, FormGroup, ControlLabel, FormControl } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
+import { Form, FormGroup, ControlLabel, FormControl } from 'rsuite';
 import GenericUploader from 'components/forms/GenericUploader';
 import { UploadControls } from 'components/forms/UploadControls';
 import { useAPI } from 'hooks/useAPI';
@@ -22,7 +22,7 @@ function categoriesToJson(s?: string) {
     return undefined;
 }
 
-export default function SearchVideoRoute() {
+export default function SearchVideoRoute(): JSX.Element {
     const [videoList, setVideoList] = useState<FileType[]>([]);
     const [category, setCategory] = useState<string>();
     const { loading, progress, data, executePost } = useAPI({ path: 'video' });
