@@ -19,6 +19,24 @@ image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).to(device)
 image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).to(device)
 
 def get_texts_images_imagenames():
+    '''
+        Uses the images and categories file in the upload folder as input. Retrieves the texts from the categories file,
+        the images and imagenames from the uploaded images.
+
+        Returns
+        -------
+        texts : List[str]
+            List of categories from the categories file.
+        images : List
+            List of images from the upload folder, preprocessed with the model.
+        imagenames : List[str]
+            Names of all images returned.
+
+        Raises
+        ------
+        MessageException
+            If the categories file has an invalid encoding or syntax or an image has invalid content.
+        '''
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
@@ -52,6 +70,27 @@ def get_texts_images_imagenames():
     return texts,images,imagenames
 
 def predict_multiple(by_image):
+    '''
+    Uses the images and a categories file in the upload folder as input. Maps one image to each category or one category
+    to each image depending on the parameter by_image.
+
+    Parameters
+    ----------
+    by_image : bool
+        If `True` the function returns one category for each image as used for categorizing, otherwise one image for
+        each category as used for searching.
+
+    Returns
+    -------
+    flask.Response
+        Response with a json containing the mappings of imagenames to categories.
+
+    Raises
+    ------
+    MessageException
+        If the categories file has an invalid encoding or syntax, an image has invalid content or a category has invalid
+        length (>77 characters).
+    '''
     texts,images,imagenames = get_texts_images_imagenames()
 
     image_input = torch.tensor(np.stack(images)).to(device)
@@ -75,6 +114,26 @@ def predict_multiple(by_image):
 
 
 def get_texts_images_imagenames_videopath():
+    '''
+    Uses the video and categories file in the upload folder as input. Retrieves the texts from the categories file, the
+    videopath, the images and imagenames from the video.
+
+    Returns
+    -------
+    texts : List[str]
+        List of categories from the categories file.
+    images : List
+        List of images retrieved from the video (one per second) and preprocessed with the model
+    imagenames : List[str]
+        Names of all images returned.
+    videopath : str
+        Path to the video in the upload folder.
+
+    Raises
+    ------
+    MessageException
+        If the categories file has an invalid encoding or syntax.
+    '''
     dir = app.app.config['UPLOAD_FOLDER']
     texts = []
     images = []
@@ -104,6 +163,22 @@ def get_texts_images_imagenames_videopath():
     return texts,images,imagenames,videopath
 
 def video_retrieval():
+    '''
+        Uses the video and categories file in the upload folder as input. Searches the video for the best matching image
+        to each category.
+
+        Returns
+        -------
+        flask.Response
+            Response object with a json containing a base64 encoded image mapped to each category.
+
+        Raises
+        ------
+        MessageException
+            If the categories file has an invalid encoding or syntax, the video file has invalid content or one of the
+            categories has an invalid length (>77 characters).
+
+    '''
     texts,images,imagenames,videopath = get_texts_images_imagenames_videopath()
 
     try:
@@ -134,6 +209,21 @@ def video_retrieval():
     return Response(json.dumps(result), status=201, mimetype='application/json')
 
 def extractImages(pathIn):
+    '''
+        Extracts one images per second from the video given by pathIn.
+
+        Parameters
+        ----------
+        pathIn : str
+            The path to the video in the upload folder.
+
+        Returns
+        -------
+        images : List
+            List of images extracted from the video and preprocessed with the model.
+        count : int
+            Count of images returned.
+    '''
     images = []
     count = 0
     vidcap = cv2.VideoCapture(pathIn)
@@ -147,8 +237,22 @@ def extractImages(pathIn):
             count = count + 1
     return images, count
 
-# index in seconds
 def saveImageFromVideo(pathIn, index):
+    '''
+        Saves the image at position index of the video given by pathIn.
+
+        Parameters
+        ----------
+        pathIn : str
+            The path to the video in the upload folder.
+        index : int
+            The offset of the image in seconds.
+
+        Returns
+        -------
+        image_path : str
+            The path of the newly saved image.
+    '''
     vidcap = cv2.VideoCapture(pathIn)
     vidcap.set(cv2.CAP_PROP_POS_MSEC, (index * 1000))
     success, image = vidcap.read()
