@@ -10,6 +10,18 @@ import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchVideoRoute.module.css';
 
+function categoriesToJson(s?: string) {
+    if (s) {
+        //replaces multiple whitespaces with only one and replaces semicolons with ','
+        const categoriesWithoutMultipleWhitespaces = s.replace(/\s\s+/g, ' ')
+            .replaceAll(';', ',');
+        //trims leading and ending whitespaces
+        const categories = categoriesWithoutMultipleWhitespaces.split(',').map(c => c.trim());
+        return JSON.stringify({ categories });
+    }
+    return undefined;
+}
+
 export default function SearchVideoRoute() {
     const [videoList, setVideoList] = useState<FileType[]>([]);
     const [category, setCategory] = useState<string>();
@@ -72,17 +84,4 @@ export default function SearchVideoRoute() {
             </ImageGrid>
         </div>
     );
-}
-
-
-function categoriesToJson(s?: string) {
-    if (s) {
-        //replaces multiple whitespaces with only one and replaces semicolons with ','
-        const categoriesWithoutMultipleWhitespaces = s.replace(/\s\s+/g, ' ')
-            .replaceAll(';', ',');
-        //trims leading and ending whitespaces
-        const categories = categoriesWithoutMultipleWhitespaces.split(',').map(c => c.trim());
-        return JSON.stringify({ categories });
-    }
-    return undefined;
 }
