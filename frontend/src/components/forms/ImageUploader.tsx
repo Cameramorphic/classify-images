@@ -4,9 +4,10 @@ import { ControlLabel, FormGroup, Uploader } from 'rsuite';
 
 import { GenericUploaderProps, validateOnChange } from './GenericUploader';
 
+/** List of default image file extentions. */
 const acceptDefault = ['.png', '.jpg', '.jpeg'];
 
-type IProps = GenericUploaderProps;
+type IProps = Omit<GenericUploaderProps, 'multiple'>;
 
 export default function ImageUploader({ label, accept = acceptDefault, fileList, onChange }: IProps): JSX.Element {
     const uploader =

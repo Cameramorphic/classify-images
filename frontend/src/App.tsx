@@ -11,8 +11,12 @@ import { PATHS, routes } from 'routes/routeConfig';
 
 import styles from './App.module.css';
 
+/** Content wrapper class name to control width in a responsive layout. */
 export const containerClass = styles.widthContainer;
 
+/**
+ * The Content Component renders the correct page based on the path.
+ */
 function Content() {
   const { pathname } = useLocation();
   const currentRoute = routes.find(route => route.path === pathname);
@@ -30,6 +34,11 @@ function Content() {
   </>);
 }
 
+/**
+ * Main application component.
+ *
+ * Renders everything in this single page application.
+ */
 function App(): JSX.Element {
   return (<>
     <Router>

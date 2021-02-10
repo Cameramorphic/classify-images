@@ -7,8 +7,8 @@ import readme from './README.md';
 import styles from './AboutRoute.module.css';
 
 /**
- * Displays the readme.md
-*/
+ * Displays the README.md file.
+ */
 export default function AboutRoute(): JSX.Element {
   const [mdText, setMdText] = useState('');
 

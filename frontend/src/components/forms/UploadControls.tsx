@@ -5,8 +5,11 @@ import { Button, Progress } from 'rsuite';
 import styles from './UploadControls.module.css';
 
 interface IProps {
+    /** Disables the upload button. */
     disabled?: boolean;
+    /** Shows a loading indicator on the upload button. */
     loading?: boolean;
+    /** Upload progress in percent. Progress bar hidden if undefined. */
     progress?: number;
     onUpload?(): void;
 }

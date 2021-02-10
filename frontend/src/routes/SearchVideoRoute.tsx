@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 
+import { Form, FormGroup, ControlLabel, FormControl } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
-import { Form, FormGroup, ControlLabel, FormControl } from 'rsuite';
 import GenericUploader from 'components/forms/GenericUploader';
 import { UploadControls } from 'components/forms/UploadControls';
 import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchVideoRoute.module.css';
 
-function categoriesToJson(s?: string) {
-    if (s) {
+/**
+ * Parses a string of categories and converts them into a JSON string.
+ *
+ * @param categoryString Categories as a comma separated string.
+ */
+function categoriesToJson(categoryString?: string) {
+    if (categoryString) {
         // replaces multiple whitespaces with only one and replaces semicolons with ','
-        const categoriesWithoutMultipleWhitespaces = s.replace(/\s\s+/g, ' ')
+        const categoriesWithoutMultipleWhitespaces = categoryString.replace(/\s\s+/g, ' ')
             .replaceAll(';', ',');
         // trims leading and ending whitespaces
         const categories = categoriesWithoutMultipleWhitespaces.split(',').map(c => c.trim());
@@ -29,7 +34,6 @@ export default function SearchVideoRoute(): JSX.Element {
 
     const isInputInvalid = videoList.length === 0 || category === undefined;
 
-
     const upload = () => {
         const formData = new FormData();
 
@@ -40,9 +44,7 @@ export default function SearchVideoRoute(): JSX.Element {
             // only appends json categories file if at least one category is defined
             const json = categoriesToJson(category);
             if (json) {
-                const blob = new Blob([json], {
-                    type: 'application/json'
-                });
+                const blob = new Blob([json], { type: 'application/json' });
                 const file = new File([blob], 'categories.json');
                 formData.append('categories', file, 'categories.json');
             }

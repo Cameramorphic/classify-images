@@ -7,11 +7,23 @@ import SearchImageRoute from './SearchImageRoute';
 import SearchVideoRoute from './SearchVideoRoute';
 import AboutRoute from './AboutRoute';
 
+/**
+ * Represents Route config object.
+ *
+ * Contains all properties needed to render a route.
+ */
 interface IRoute extends RouteProps {
+    /** Title of the page/route. */
     title: string;
+    /** Flag to define the type of the route. Can be used to render pages differently based on their type. */
     mainPage?: boolean;
 }
 
+/**
+ * Relative paths used for application routing.
+ *
+ * Every route path of the app should be in this object.
+ */
 export const PATHS = {
     ROOT: '/',
     CATEGORISE: '/categorise',

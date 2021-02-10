@@ -3,7 +3,14 @@ import React from 'react';
 import { Alert, ControlLabel, FormGroup, Uploader, UploaderProps } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
-export const validateOnChange = (list: FileType[], accept?: string[], onChange?: (list: FileType[]) => void): void => {
+/**
+ * Interceptor function to only execute a given callback if the given files are valid.
+ *
+ * @param list List of files to be validated.
+ * @param accept List of file extentions that are allowed.
+ * @param onChange Callback function to execute if all files are valid.
+ */
+export function validateOnChange(list: FileType[], accept?: string[], onChange?: (list: FileType[]) => void): void {
     if (accept && accept.length > 0) {
         const regex = new RegExp(`(${accept.join('|')})$`);
         if (list.some(file => !regex.test(file.name ?? ''))) {
@@ -12,15 +19,18 @@ export const validateOnChange = (list: FileType[], accept?: string[], onChange?:
         }
     }
     onChange?.(list);
-};
+}
 
 export type GenericUploaderProps = {
+    /** Label text for the uploader. */
     label?: string;
+    /** List of file extentions to be allowed. e.g. '.jpg' */
     accept?: string[];
+    /** Allow multiple files to be selected if true, or only one otherwise. */
     multiple?: boolean;
 } & Pick<UploaderProps, 'fileList' | 'onChange'>;
 
-type IProps = GenericUploaderProps
+type IProps = GenericUploaderProps;
 
 export default function GenericUploader({ label, accept, multiple, fileList, onChange }: IProps): JSX.Element {
     const uploader =
