@@ -19,15 +19,15 @@ export default function ClassifyRoute() {
 
     const isInputInvalid = imageList.length === 0 || categoryList.length > 1;
 
-    const upload = async () => {
+    const upload = () => {
         if (isInputInvalid) return;
         const formData = new FormData();
-        imageList.forEach(file => file.blobFile && formData.append('files', file.blobFile))
+        imageList.forEach(file => file.blobFile && formData.append('files', file.blobFile));
         if (categoryList.length !== 0) {
             const categoryFile = categoryList[0].blobFile;
             if (categoryFile) formData.append('categories', categoryFile);
         }
-        await executePost(formData);
+        executePost(formData);
     };
 
     return (

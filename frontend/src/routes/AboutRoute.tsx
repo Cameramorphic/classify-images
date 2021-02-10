@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown';
 
 import readme from './README.md';
 
 import styles from './AboutRoute.module.css';
 
-/** 
+/**
  * Displays the readme.md
 */
 export default function AboutRoute() {

@@ -1,7 +1,7 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState } from 'react';
 
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { Alert } from "rsuite";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Alert } from 'rsuite';
 
 const API_BASE_URL = 'http://localhost:8080';
 

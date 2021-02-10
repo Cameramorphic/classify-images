@@ -20,7 +20,7 @@ export type GenericUploaderProps = {
     multiple?: boolean;
 } & Pick<UploaderProps, 'fileList' | 'onChange'>;
 
-interface IProps extends GenericUploaderProps { }
+type IProps = GenericUploaderProps
 
 export default function GenericUploader({ label, accept, multiple, fileList, onChange }: IProps) {
     const uploader =

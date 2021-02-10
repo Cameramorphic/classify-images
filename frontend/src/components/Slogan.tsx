@@ -28,7 +28,7 @@ export default function Slogan({ text, small }: IProps) {
                             }
                         },
                         color: {
-                            value: "#ffffff"
+                            value: '#ffffff'
                         },
                         opacity: {
                             value: 0.5,
@@ -53,17 +53,17 @@ export default function Slogan({ text, small }: IProps) {
                         line_linked: {
                             enable: true,
                             distance: 150,
-                            color: "#ffffff",
+                            color: '#ffffff',
                             opacity: 0.4,
                             width: 1
                         },
                         move: {
                             enable: !small,
                             speed: 2,
-                            direction: "none",
+                            direction: 'none',
                             random: false,
                             straight: false,
-                            out_mode: "bounce",
+                            out_mode: 'bounce',
                             bounce: false,
                             attract: {
                                 enable: false,
@@ -73,11 +73,11 @@ export default function Slogan({ text, small }: IProps) {
                         }
                     },
                     interactivity: {
-                        detect_on: "window",
+                        detect_on: 'window',
                         events: {
                             onhover: {
                                 enable: !small,
-                                mode: "bubble"
+                                mode: 'bubble'
                             },
                             resize: true
                         },

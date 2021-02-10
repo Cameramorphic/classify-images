@@ -1,11 +1,11 @@
-import { RouteProps } from "react-router-dom";
+import { RouteProps } from 'react-router-dom';
 
-import ClassifyRoute from "./ClassifyRoute";
-import ErrorRoute from "./ErrorRoute";
-import RootRoute from "./RootRoute";
-import SearchImageRoute from "./SearchImageRoute";
-import SearchVideoRoute from "./SearchVideoRoute";
-import AboutRoute from "./AboutRoute";
+import ClassifyRoute from './ClassifyRoute';
+import ErrorRoute from './ErrorRoute';
+import RootRoute from './RootRoute';
+import SearchImageRoute from './SearchImageRoute';
+import SearchVideoRoute from './SearchVideoRoute';
+import AboutRoute from './AboutRoute';
 
 interface IRoute extends RouteProps {
     title: string;
@@ -19,7 +19,7 @@ export const PATHS = {
     SEARCH_IMAGES: '/search-images',
     ABOUT: '/about',
     ERROR: '/404'
-}
+};
 
 export const routes: IRoute[] = [
     {

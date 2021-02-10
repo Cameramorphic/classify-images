@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Form, FormGroup, ControlLabel, FormControl } from 'rsuite';
-import { FileType } from "rsuite/lib/Uploader";
+import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
 import GenericUploader from 'components/forms/GenericUploader';
@@ -12,10 +12,10 @@ import styles from './SearchVideoRoute.module.css';
 
 function categoriesToJson(s?: string) {
     if (s) {
-        //replaces multiple whitespaces with only one and replaces semicolons with ','
+        // replaces multiple whitespaces with only one and replaces semicolons with ','
         const categoriesWithoutMultipleWhitespaces = s.replace(/\s\s+/g, ' ')
             .replaceAll(';', ',');
-        //trims leading and ending whitespaces
+        // trims leading and ending whitespaces
         const categories = categoriesWithoutMultipleWhitespaces.split(',').map(c => c.trim());
         return JSON.stringify({ categories });
     }
@@ -30,24 +30,24 @@ export default function SearchVideoRoute() {
     const isInputInvalid = videoList.length === 0 || category === undefined;
 
 
-    const upload = async () => {
+    const upload = () => {
         const formData = new FormData();
 
         if (videoList[0]) {
             const video = videoList[0].blobFile;
             if (video) formData.append('video', video);
 
-            //only appends json categories file if at least one category is defined
-            const json = categoriesToJson(category)
+            // only appends json categories file if at least one category is defined
+            const json = categoriesToJson(category);
             if (json) {
                 const blob = new Blob([json], {
                     type: 'application/json'
                 });
-                const file = new File([blob], 'categories.json')
+                const file = new File([blob], 'categories.json');
                 formData.append('categories', file, 'categories.json');
             }
 
-            await executePost(formData);
+            executePost(formData);
         }
     };
 
