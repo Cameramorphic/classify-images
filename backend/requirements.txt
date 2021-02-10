@@ -4,3 +4,4 @@ gunicorn==19.7.1 #this gunicorn version is important because newer versions thre
 numpy==1.19.2
 opencv-python-headless==4.5.1.48 #this version of opencv is for servers/dockers that don't have the gui packages necessary for the normal package installes
 pdoc3==0.9.2
+requests==2.25.1

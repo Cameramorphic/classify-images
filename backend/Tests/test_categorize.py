@@ -5,6 +5,7 @@ import abstract_test
 import json
 
 pytest_plugins = ["docker_compose"]
+
 files = os.listdir("Pictures")
 
 
@@ -23,16 +24,18 @@ def test_post_categorize_csv(module_scoped_container_getter):
 
     json_response = abstract_test.post_multipart(abstract_test.categorize, multipart_form_data)
     for f in files:
-        assert ((json_response[f] == "an apple") or (json_response[f] == "a cat") or json_response[f] == "a dog")
-    assert len(json_response) == len(files)
+        if f != "sources.txt":
+            assert ((json_response[f] == "an apple") or (json_response[f] == "a cat") or json_response[f] == "a dog")
+    assert len(json_response) == len(files) - 1
 
 def test_post_categorize_json(module_scoped_container_getter):
     multipart_form_data = abstract_test.build_base_multipart_images(abstract_test.categorize, files)
     multipart_form_data.append(('categories', (str(abstract_test.example_json), open('CategoryFiles/' + abstract_test.example_json, 'rb'), 'text/plain')))
     json_response = abstract_test.post_multipart(abstract_test.categorize, multipart_form_data)
     for f in files:
-        assert ((json_response[f] == "an apple") or (json_response[f] == "a dog"))
-    assert len(json_response) == len(files)
+        if f != "sources.txt":
+            assert ((json_response[f] == "an apple") or (json_response[f] == "a dog"))
+    assert len(json_response) == len(files) - 1
 
 
 
