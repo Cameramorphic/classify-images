@@ -74,8 +74,10 @@ def is_image(path):
     try:
         image = Image.open(path)
         image.verify()
+        os.remove(path)
         return True
     except (IOError, SyntaxError):
+        os.remove(path)
         return False
 
 def is_valid_response(categories, json_response):
