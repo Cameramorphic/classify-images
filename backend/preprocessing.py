@@ -173,7 +173,8 @@ def video_retrieval():
         Returns
         -------
         flask.Response
-            Response object with a json containing a base64 encoded image mapped to each category.
+            Response with a json containing a list with a base64 encoded image, the probability calculated by the model
+             and the images position in seconds the mapped to each category.
 
         Raises
         ------
@@ -251,7 +252,7 @@ def saveImageFromVideo(pathIn, index):
         pathIn : str
             The path to the video in the upload folder.
         index : int
-            The offset of the image in seconds.
+            The position of the image in seconds.
 
         Returns
         -------

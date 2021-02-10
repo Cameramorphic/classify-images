@@ -48,7 +48,21 @@ ALLOWED_VIDEO_EXTS = {'mp4'}
 
 
 def is_allowed(filename, exts):
-    ''' Checks the filenames extension. '''
+    '''
+    Checks the filenames extension.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to check.
+    exts : Set[str]
+        Set of valid extensions.
+
+    Returns
+    -------
+    bool
+        `True` if the filenames extension is part of the allowed file extensions.
+    '''
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in exts
 
 
@@ -113,6 +127,17 @@ def save_images_and_categories_file(allow_no_categories_file):
 
 @app.route("/categorize", methods=['GET', 'POST'])
 def categorize():
+    '''
+    Categorizes images by assigning one category to each image depending on the image content. Expects the images and a
+    file with categories as part of the POST request. In case of a GET request a HTML for the file selection is
+    returned.
+
+    Returns
+    -------
+    flask.Response
+        Depending on the request method the response either contains a HTML for the file selection
+        (request method : GET) or a json with a mapping of image filenames to categories (request method: POST).
+    '''
     if request.method != 'POST':
         return Response(SELECT_FILES_HTML, status=200, mimetype='text/html')
 
@@ -122,6 +147,17 @@ def categorize():
 
 @app.route("/image", methods=['GET', 'POST'])
 def image():
+    '''
+    Searches images by assigning one image to each category depending on the image content. Expects the images and a
+    file with categories as part of the POST request. In case of a GET request a HTML for the file selection is
+    returned.
+
+    Returns
+    -------
+    flask.Response
+        Depending on the request method the response either contains a HTML for the file selection
+        (request method : GET) or a json with a mapping of categories to image filenames(request method: POST).
+    '''
     if request.method != 'POST':
         return Response(SELECT_FILES_HTML, status=200, mimetype='text/html')
 
@@ -131,6 +167,18 @@ def image():
 
 @app.route("/video", methods=['GET', 'POST'])
 def video():
+    '''
+    Uses categories to find images in a video by assigning one image extracted from the video to each category. Expects
+    the video and the file with categories as part of the POST request. In case of a GET request a HTML for the file
+    selection is returned.
+
+    Returns
+    -------
+    flask.Response
+        Depending on the request method the response either contains a HTML for the file selection
+        (request method : GET) or a json with a mapping of categories to a list with the base64 encoded image,
+        the probability calculated by the model and the images position in seconds (request method: POST).
+    '''
     if request.method != 'POST':
         return Response(SELECT_VID_FILES_HTML, status=200, mimetype='text/html')
 
