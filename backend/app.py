@@ -42,8 +42,8 @@ SELECT_VID_FILES_HTML = '''
         </form>
          '''
 
-ALLOWED_IMAGE_EXTS = {'png', 'jpg', 'jpeg'}
-ALLOWED_CATEGORIES_EXTS = {'csv', 'json'}
+ALLOWED_IMAGE_EXTS = ['png', 'jpg', 'jpeg']
+ALLOWED_CATEGORIES_EXTS = ['csv', 'json']
 ALLOWED_VIDEO_EXTS = {'mp4'}
 
 

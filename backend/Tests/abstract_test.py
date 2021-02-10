@@ -11,6 +11,8 @@ video = "/video"
 
 example_csv = 'example_categories_csv.csv'
 example_json = 'example_categories_json.json'
+utf16_csv = "cloud-16.csv"
+utf16_json = "cloud-16.json"
 
 SELECT_FILES_HTML = '''
         <form method="POST" enctype="multipart/form-data">
@@ -38,12 +40,12 @@ def wait_for_server(test_path):
             time.sleep(5)
 
 
-def build_base_multipart_images(endpoint, files):
+def build_base_multipart_images(endpoint, files, dir_path):
     wait_for_server(endpoint)
     multipart_form_data = []
     for f in files:
         if f != "sources.txt":
-            multipart_form_data.append(('files', (str(f), open('Pictures/' + f, 'rb'), 'image/jpg')))
+            multipart_form_data.append(('files', (str(f), open(dir_path + f, 'rb'), 'image/jpg')))
     return multipart_form_data
 
 
@@ -53,9 +55,9 @@ def build_base_video(endpoint, file):
     return multipart_form_data
 
 
-def post_multipart(endpoint, multipart_form_data):
+def post_multipart(endpoint, multipart_form_data, status_code):
     wait_for_server(categorize)
     response = requests.post(ADDRESS + endpoint, files=multipart_form_data)
-    assert response.status_code == 201
+    assert response.status_code == status_code
     json_response = json.loads(response.text)
     return json_response

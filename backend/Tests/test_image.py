@@ -22,7 +22,7 @@ def test_post_image_csv(module_scoped_container_getter):
     multipart_form_data.append(('categories', (
         str(abstract_test.example_csv), open('CategoryFiles/' + abstract_test.example_csv, 'rb'), 'text/plain')))
 
-    json_response = abstract_test.post_multipart(abstract_test.image, multipart_form_data)
+    json_response = abstract_test.post_multipart(abstract_test.image, multipart_form_data, 201)
 
     with open('CategoryFiles/' + abstract_test.example_csv, 'r') as f:
         reader = csv.reader(f)
@@ -41,7 +41,7 @@ def test_post_image_json(module_scoped_container_getter):
     multipart_form_data = abstract_test.build_base_multipart_images(abstract_test.image, files)
     multipart_form_data.append(('categories', (
         str(abstract_test.example_json), open('CategoryFiles/' + abstract_test.example_json, 'rb'), 'text/plain')))
-    json_response = abstract_test.post_multipart(abstract_test.image, multipart_form_data)
+    json_response = abstract_test.post_multipart(abstract_test.image, multipart_form_data, 201)
 
     with open('CategoryFiles/' + abstract_test.example_json) as json_file:
         categories = json.load(json_file)['categories']
