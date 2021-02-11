@@ -9,6 +9,6 @@
 
 @media (min-width: 1440px) {
   .widthContainer {
-    width: 1440px;
+    max-width: 1440px;
   }
 }

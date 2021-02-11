@@ -3,7 +3,7 @@ import React from 'react';
 import clx from 'classnames';
 import { Link, NavLink } from 'react-router-dom';
 
-import logo from 'assets/icons/logo.svg';
+import logo from 'assets/icons/ClassifyImages_Logo.svg';
 import githubLogo from 'assets/icons/GitHub_Logo.png';
 import { PATHS } from 'routes/routeConfig';
 import { containerClass } from 'App';
