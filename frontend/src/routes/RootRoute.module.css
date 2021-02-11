@@ -17,7 +17,7 @@
 
 .gridItem:hover {
   color: rgb(28, 138, 76);
-  box-shadow: 1px 1px 20px rgba(66, 124, 91, 0.3);
+  box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.25);
 }
 
 .gridItem:first-child {

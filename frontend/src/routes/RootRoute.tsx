@@ -26,7 +26,7 @@ export default function RootRoute(): JSX.Element {
                 Tag your images with your own categories, powered by AI.
             </GridItem>
             <GridItem link={PATHS.SEARCH_VIDEO} title='Search Video'>
-                Use text to find occurances of sonething in a video file and get the respective timestamps.
+                Use text to find occurances of something in a video file and get the respective timestamps.
             </GridItem>
             <GridItem link={PATHS.SEARCH_IMAGES} title='Search Images'>
                 Use text to find matching images from a given list.
