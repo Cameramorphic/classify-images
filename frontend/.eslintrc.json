@@ -56,10 +56,10 @@
                 "after": true
             }
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
+        // "linebreak-style": [
+        //     "error",
+        //     "unix"
+        // ],
         "multiline-ternary": [
             "error",
             "always-multiline"
