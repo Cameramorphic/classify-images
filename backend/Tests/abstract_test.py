@@ -30,6 +30,7 @@ SELECT_VID_FILES_HTML = '''
         </form>
          '''
 
+
 # Tests if specified endpoint url is reachable
 def wait_for_server(test_path):
     for i in range(10):

@@ -49,14 +49,16 @@ def test_post_video_csv_utf16(module_scoped_container_getter):
     multipart_form_data = build_video_multipart(file, abstract_test.utf16_csv, "Videos/")
     json_response = abstract_test.post_multipart(abstract_test.video, multipart_form_data, 400)
 
-    assert json_response['error'] == 'Invalid encoding in file ' + abstract_test.utf16_csv + ', valid encodings are UTF-8 and US-ASCII'
+    assert json_response['error'] == 'Invalid encoding in file '\
+           + abstract_test.utf16_csv + ', valid encodings are UTF-8 and US-ASCII'
 
 
 def test_post_video_json_utf16(module_scoped_container_getter):
     multipart_form_data = build_video_multipart(file, abstract_test.utf16_json, "Videos/")
     json_response = abstract_test.post_multipart(abstract_test.video, multipart_form_data, 400)
 
-    assert json_response['error'] == 'Invalid encoding in file ' + abstract_test.utf16_json + ', valid encodings are UTF-8 and US-ASCII'
+    assert json_response['error'] == 'Invalid encoding in file ' \
+           + abstract_test.utf16_json + ', valid encodings are UTF-8 and US-ASCII'
 
 
 def test_post_video_invalid_video_file(module_scoped_container_getter):
