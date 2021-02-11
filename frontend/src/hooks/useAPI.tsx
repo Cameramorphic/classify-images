@@ -4,7 +4,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Alert } from 'rsuite';
 
 /** URL of the API used as base for all requests. */
-const API_BASE_URL = 'http://localhost:8080';
+export const API_BASE_URL = 'http://localhost:8080';
 
 /** Duration an alert is shown for in milliseconds. */
 const ALERT_DURATION = 8000;
