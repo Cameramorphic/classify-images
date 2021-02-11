@@ -1,38 +1,23 @@
 import React, { useState } from 'react';
 
-import { Form, FormGroup, ControlLabel, FormControl } from 'rsuite';
+import { Form } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
 import GenericUploader from 'components/forms/GenericUploader';
+import TextUploader, { TextInputType } from 'components/forms/TextUploader';
 import { UploadControls } from 'components/forms/UploadControls';
+import { getTextFile } from 'helpers/fileHelper';
 import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchVideoRoute.module.css';
 
-/**
- * Parses a string of categories and converts them into a JSON string.
- *
- * @param categoryString Categories as a comma separated string.
- */
-function categoriesToJson(categoryString?: string) {
-    if (categoryString) {
-        // replaces multiple whitespaces with only one and replaces semicolons with ','
-        const categoriesWithoutMultipleWhitespaces = categoryString.replace(/\s\s+/g, ' ')
-            .replaceAll(';', ',');
-        // trims leading and ending whitespaces
-        const categories = categoriesWithoutMultipleWhitespaces.split(',').map(c => c.trim());
-        return JSON.stringify({ categories });
-    }
-    return undefined;
-}
-
 export default function SearchVideoRoute(): JSX.Element {
     const [videoList, setVideoList] = useState<FileType[]>([]);
-    const [category, setCategory] = useState<string>();
+    const [category, setCategory] = useState<TextInputType>({});
     const { loading, progress, data, executePost } = useAPI({ path: 'video' });
 
-    const isInputInvalid = videoList.length === 0 || category === undefined;
+    const isInputInvalid = videoList.length === 0 || !category.hasContent;
 
     const upload = () => {
         const formData = new FormData();
@@ -41,13 +26,8 @@ export default function SearchVideoRoute(): JSX.Element {
             const video = videoList[0].blobFile;
             if (video) formData.append('video', video);
 
-            // only appends json categories file if at least one category is defined
-            const json = categoriesToJson(category);
-            if (json) {
-                const blob = new Blob([json], { type: 'application/json' });
-                const file = new File([blob], 'categories.json');
-                formData.append('categories', file, 'categories.json');
-            }
+            const file = getTextFile(category, 'categories');
+            if (file) formData.append('categories', file);
 
             executePost(formData);
         }
@@ -62,14 +42,12 @@ export default function SearchVideoRoute(): JSX.Element {
                     fileList={videoList}
                     onChange={setVideoList}
                 />
-                <FormGroup>
-                    <ControlLabel>Categories</ControlLabel>
-                    <FormControl
-                        name='categories'
-                        value={category}
-                        onChange={setCategory}
-                    />
-                </FormGroup>
+                <TextUploader
+                    label='Categories'
+                    data={category}
+                    onChange={setCategory}
+                    accept={['.csv', '.json']}
+                />
                 <UploadControls
                     onUpload={upload}
                     disabled={isInputInvalid}

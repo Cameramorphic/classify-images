@@ -4,26 +4,28 @@ import { Form } from 'rsuite';
 import { FileType } from 'rsuite/lib/Uploader';
 
 import { ImageGrid, ImageGridItem } from 'components/ImageGrid';
-import GenericUploader from 'components/forms/GenericUploader';
+import TextUploader, { TextInputType } from 'components/forms/TextUploader';
 import ImageUploader from 'components/forms/ImageUploader';
 import { UploadControls } from 'components/forms/UploadControls';
+import { getTextFile } from 'helpers/fileHelper';
 import { useAPI } from 'hooks/useAPI';
 
 import styles from './SearchImageRoute.module.css';
 
 export default function SearchImageRoute(): JSX.Element {
     const [imageList, setImageList] = useState<FileType[]>([]);
-    const [categoryList, setCategoryList] = useState<FileType[]>([]);
+    const [category, setCategory] = useState<TextInputType>({});
     const { loading, progress, data, executePost } = useAPI({ path: 'image' });
 
-    const isInputInvalid = imageList.length === 0 || categoryList.length !== 1;
+    const isInputInvalid = imageList.length === 0 || !category.hasContent;
 
     const upload = () => {
         if (isInputInvalid) return;
         const formData = new FormData();
         imageList.forEach(file => file.blobFile && formData.append('files', file.blobFile));
-        const categoryFile = categoryList[0].blobFile;
-        if (categoryFile) formData.append('categories', categoryFile);
+
+        const file = getTextFile(category, 'categories');
+        if (file) formData.append('categories', file);
 
         executePost(formData);
     };
@@ -36,10 +38,10 @@ export default function SearchImageRoute(): JSX.Element {
                     fileList={imageList}
                     onChange={setImageList}
                 />
-                <GenericUploader
+                <TextUploader
                     label='Categories'
-                    fileList={categoryList}
-                    onChange={setCategoryList}
+                    data={category}
+                    onChange={setCategory}
                     accept={['.csv', '.json']}
                 />
                 <UploadControls
