@@ -6,9 +6,9 @@ name: Python application
 on:
   push:
     branches: [ dev ]
-    paths: backend
+    paths: 'backend/**'
   pull_request:
-    paths: backend
+    paths: 'backend/**'
     branches: [ dev ]
 
 jobs:
