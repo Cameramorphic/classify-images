@@ -3,8 +3,10 @@ name: React Frontend
 on:
   push:
     branches: [ dev ]
+    paths: 'frontend/**'
   pull_request:
     branches: [ dev ]
+    paths: 'frontend/**'
 
 jobs:
   checks:
