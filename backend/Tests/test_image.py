@@ -51,16 +51,19 @@ def test_post_image_json(module_scoped_container_getter):
 def test_post_image_csv_utf16(module_scoped_container_getter):
     multipart_form_data = build_image_multipart("Pictures/", abstract_test.utf16_csv)
     json_response = abstract_test.post_multipart(abstract_test.image, multipart_form_data, 400)
-    assert json_response["error"] == "Invalid encoding in file " + abstract_test.utf16_csv + ", valid encodings are UTF-8 and US-ASCII"
+    assert json_response["error"] == "Invalid encoding in file " \
+           + abstract_test.utf16_csv + ", valid encodings are UTF-8 and US-ASCII"
 
 
 def test_post_image_json_utf16(module_scoped_container_getter):
     multipart_form_data = build_image_multipart("Pictures/", abstract_test.utf16_json)
     json_response = abstract_test.post_multipart(abstract_test.image, multipart_form_data, 400)
-    assert json_response["error"] == "Invalid encoding in file " + abstract_test.utf16_json + ", valid encodings are UTF-8 and US-ASCII"
+    assert json_response["error"] == "Invalid encoding in file " \
+           + abstract_test.utf16_json + ", valid encodings are UTF-8 and US-ASCII"
 
 def test_post_image_invalid_image_files(module_scoped_container_getter):
-    multipart_form_data = abstract_test.build_base_multipart_images(abstract_test.image, os.listdir("InvalidFiles"), "InvalidFiles/")
+    multipart_form_data = abstract_test\
+        .build_base_multipart_images(abstract_test.image, os.listdir("InvalidFiles"), "InvalidFiles/")
     multipart_form_data.append(('categories', (str(abstract_test.example_json)
                                                , open("CategoryFiles/" + abstract_test.example_json, 'rb')
                                                , 'text/plain')))
