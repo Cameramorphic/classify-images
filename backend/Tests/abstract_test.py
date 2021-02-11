@@ -49,9 +49,9 @@ def build_base_multipart_images(endpoint, files, dir_path):
     return multipart_form_data
 
 
-def build_base_video(endpoint, file):
+def build_base_video(endpoint, file, dir_path):
     wait_for_server(endpoint)
-    multipart_form_data = [('video', (str(file), open('Videos/' + file, 'rb'), 'video/mp4'))]
+    multipart_form_data = [('video', (str(file), open(dir_path + file, 'rb'), 'video/mp4'))]
     return multipart_form_data
 
 

@@ -1,0 +1,12 @@
+apple.jpg     from https://pixabay.com/de/photos/apple-rot-lecker-obst-256268/
+banana.png    from https://pixabay.com/de/illustrations/banane-gelb-s%C3%BC%C3%9F-gesund-obst-2850841/
+candle.jpg    from https://pixabay.com/de/photos/kerze-licht-flamme-weihnachten-876339/
+cat.png       from https://pixabay.com/de/photos/katze-tabby-gesicht-bart-haustier-1508613/
+deer.png      from https://pixabay.com/de/photos/natur-reh-wald-damwild-scheu-2634729/
+house.png     from https://pixabay.com/de/photos/landhaus-geb%C3%A4ude-haus-spukhaus-540796/
+pineapple.png from https://pixabay.com/de/vectors/ananas-obst-tropisch-frisch-reif-25251/
+pug.png       from https://pixabay.com/de/photos/mops-hund-tier-niedlich-690566/
+tree.png      from https://pixabay.com/de/photos/baum-park-herbst-laub-natur-99852/
+wave.png      from https://pixabay.com/de/photos/welle-wasser-surfen-ozean-meer-3445011/
+
+All images were published under Pixabay License: https://pixabay.com/de/service/license/
