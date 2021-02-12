@@ -59,7 +59,11 @@ export default function SearchVideoRoute(): JSX.Element {
                 {data && Object.keys(data).map(key => {
                     const image_content = data[key][0];
                     const image_url = 'data:image/jpeg;base64,' + image_content;
-                    return <ImageGridItem key={key} imageUrl={image_url} title={key} />;
+                    const sec = data[key][2];
+                    const padded = (num: number) => `${num}`.padStart(2, '0');
+                    return <ImageGridItem key={key} imageUrl={image_url} title={key}>
+                        At {padded(Math.floor(sec / 60))}:{padded(sec % 60)} in the video.
+                    </ImageGridItem>;
                 })}
             </ImageGrid>
         </div>
